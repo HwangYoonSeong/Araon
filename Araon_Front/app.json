@@ -17,7 +17,12 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.araon.araonfront",
+      "buildNumber": "1.0.0",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBOsaINXPUbXJ28nB135OEMsJjocKxeWJA"
+      }
     },
     "android": {
       "adaptiveIcon": {
