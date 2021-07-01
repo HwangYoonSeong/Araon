@@ -1,7 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useCallback } from 'react';
 import MapView from 'react-native-maps';
-import { Button, SafeAreaView, StyleSheet, Text, TextInput, View, Dimensions, ScrollView } from 'react-native';
+import axios from "axios";
+import {
+  Button, SafeAreaView, StyleSheet, Text,
+  TextInput, View, Dimensions, ScrollView,
+  KeyboardAvoidingView
+} from 'react-native';
 import Markers from './components/Markers';
 
 const MyTextInput = ({ value, name, type, onChange, placeholder }) => {
@@ -23,14 +28,45 @@ export default function App () {
     lng: '',
   });
 
+  const [address, setaddress] = useState('');
+
+  const onChangeAddress = Inputaddr => {
+    setaddress(Inputaddr);
+  };
+
+  const convertToCorp = useCallback(
+    () => {
+      axios
+        .get(`http://dapi.kakao.com/v2/local/search/address.json?query=${address}`,
+          {
+            headers: {
+              Authorization: "KakaoAK REST_APIKEY"
+            }
+          })
+        .then((response) => {
+          var corp = response.data.documents[0];
+          console.log(response.data.documents[0]);
+          setMarkers([
+            ...markers,
+            { lat: corp.y, lng: corp.x },
+
+          ]);
+
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    [address]
+  );
+
   const onChangeInputs = e => {
     const { name, type, text } = e;
-    let processedData = text;
     // 조건에 따른 value 변환
 
     setInputs({
       ...inputs,
-      [name]: processedData,
+      [name]: text,
     });
   }
 
@@ -40,7 +76,6 @@ export default function App () {
         ...markers,
         { lat: inputs.lat, lng: inputs.lng },
       ]);
-      console.log(markers);
       setInputs({});
     },
     [inputs]
@@ -48,64 +83,83 @@ export default function App () {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.scroll}>
-        <ScrollView contentContainerStyle={styles.listContainer}>
-          <View style={styles.mapContainer}>
-            <Text style={styles.gmapTitle}>Google Map</Text>
-
-            <MapView style={styles.map}
-              initialRegion={{
-                latitude: 36.151416776192065,
-                longitude: 128.44983188999225,
-                latitudeDelta: 5,
-                longitudeDelta: 5,
-              }}
-            >
-
-              <Markers markers={markers} />
-
-            </MapView>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <View style={styles.scroll}>
+          <ScrollView contentContainerStyle={styles.listContainer}>
+            <View style={styles.mapContainer}>
+              <Text style={styles.gmapTitle}>Google Map</Text>
 
 
-            <View style={styles.inputContainer}>
-              <MyTextInput
-                name="lat"
-                type="number"
-                placeholder="Lat"
-                onChange={onChangeInputs}
-                value={inputs.lat}
-                autoCorrect={false}
-              />
+              <MapView style={styles.map}
+                initialRegion={{
+                  latitude: 36.151416776192065,
+                  longitude: 128.44983188999225,
+                  latitudeDelta: 5,
+                  longitudeDelta: 5,
+                }}
+              >
 
-              <MyTextInput
-                name="lng"
-                type="number"
-                placeholder="Lng"
-                onChange={onChangeInputs}
-                value={inputs.lng}
-                autoCorrect={false}
-              />
-              <View style={styles.button}>
-                <Button
-                  onPress={addMarker}
-                  title="ADD"
-                  color="white"
+                <Markers markers={markers} />
+
+              </MapView>
+
+              <View style={styles.inputContainer}>
+                <MyTextInput
+                  name="lat"
+                  type="number"
+                  placeholder="Lat"
+                  onChange={onChangeInputs}
+                  value={inputs.lat}
+                  autoCorrect={false}
                 />
 
+                <MyTextInput
+                  name="lng"
+                  type="number"
+                  placeholder="Lng"
+                  onChange={onChangeInputs}
+                  value={inputs.lng}
+                  autoCorrect={false}
+                />
+
+                <View style={styles.button}>
+                  <Button
+                    onPress={addMarker}
+                    title="ADD"
+                    color="white"
+                  />
+
+                </View>
+              </View>
+
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Address"
+                  placeholderTextColor={'#999'}
+                  onChangeText={onChangeAddress}
+                  value={address}
+                  autoCorrect={false}
+                />
+
+                <View style={styles.button}>
+                  <Button
+                    onPress={convertToCorp}
+                    title="ADD"
+                    color="white"
+                  />
+
+                </View>
               </View>
             </View>
-          </View>
 
 
+          </ScrollView>
 
+        </View>
 
+      </KeyboardAvoidingView>
 
-
-
-
-        </ScrollView>
-
-      </View>
 
 
     </SafeAreaView >
@@ -114,7 +168,7 @@ export default function App () {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#000',
+    backgroundColor: '#fff',
     flex: 1
   },
   listContainer: {

@@ -1,8 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
 import React, { useState } from 'react';
 import { SafeAreaView, StyleSheet, TextInput, View, Text, ScrollView } from 'react-native';
 import TodoInsert from './TodoComp/TodoInsert';
 import TodoList from './TodoComp/TodoList';
+
 export default function App () {
   const [todos, setTodos] = useState([]);
 
