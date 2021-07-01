@@ -5,10 +5,13 @@ import axios from "axios";
 import {
   Button, SafeAreaView, StyleSheet, Text,
   TextInput, View, Dimensions, ScrollView,
-  KeyboardAvoidingView
+  KeyboardAvoidingView, Image
 } from 'react-native';
 import Markers from './components/Markers';
-
+import Slick from 'react-native-slick';
+import cat from './assets/cat.png';
+import dog from './assets/dog.png';
+import quokka from './assets/default.jpg';
 const MyTextInput = ({ value, name, type, onChange, placeholder }) => {
   return (
     <TextInput
@@ -40,7 +43,7 @@ export default function App () {
         .get(`http://dapi.kakao.com/v2/local/search/address.json?query=${address}`,
           {
             headers: {
-              Authorization: "KakaoAK REST_APIKEY"
+              Authorization: "KakaoAK REST_API_KEY"
             }
           })
         .then((response) => {
@@ -80,6 +83,15 @@ export default function App () {
     },
     [inputs]
   );
+
+
+
+  const items = [
+    { id: 1, url: cat },
+    { id: 2, url: dog },
+    { id: 3, url: quokka },
+  ];
+
 
   return (
     <SafeAreaView style={styles.container}>
@@ -154,11 +166,34 @@ export default function App () {
             </View>
 
 
+            <Slick style={styles.wrapper}
+              showsButtons={true}
+              activeDotColor={'#3143e8'}
+              dotColor={'white'}
+              autoplay={true}
+              nextButton={<Text style={styles.buttonText}>›</Text>}
+              prevButton={<Text style={styles.buttonText}>‹</Text>}>
+
+              {items.map(item => {
+                return (
+                  <View key={item.id}>
+                    <Image style={styles.img} source={item.url} />
+                  </View>
+                );
+              })}
+            </Slick>
+
+
           </ScrollView>
 
         </View>
 
+
+
       </KeyboardAvoidingView>
+
+
+
 
 
 
@@ -186,6 +221,7 @@ const styles = StyleSheet.create({
   },
   gmapTitle: {
     width: Dimensions.get('window').width,
+    padding: 10,
     color: '#fff',
     fontSize: 36,
     fontWeight: '300',
@@ -212,4 +248,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
 
   },
+  wrapper: {
+    height: 300
+  },
+
+  img: {
+    resizeMode: 'cover',
+    width: '100%',
+    height: '100%'
+
+  },
+  buttonText: {
+    color: '#3143e8',
+    fontSize: 60
+  }
 });
