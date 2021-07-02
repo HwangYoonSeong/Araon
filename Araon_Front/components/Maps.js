@@ -3,14 +3,14 @@ import React, { useState, useCallback } from 'react';
 
 import axios from "axios";
 import {
-    Button, SafeAreaView, StyleSheet, Text,
-    TextInput, View, Dimensions, ScrollView,
-    KeyboardAvoidingView, Image, TouchableOpacity
+    Button, StyleSheet, Text,
+    TextInput, View, Dimensions,
+
 } from 'react-native';
 
 import MapView from 'react-native-maps';
 import Markers from './Markers';
-
+import API_KEY from '../key';
 
 const MyTextInput = ({ value, name, type, onChange, placeholder }) => {
     return (
@@ -44,7 +44,7 @@ const Maps = () => {
                 .get(`http://dapi.kakao.com/v2/local/search/address.json?query=${address}`,
                     {
                         headers: {
-                            Authorization: "KakaoAK REST_API_KEY"
+                            Authorization: `KakaoAK ${API_KEY.kakao}`
                         }
                     })
                 .then((response) => {
@@ -87,7 +87,7 @@ const Maps = () => {
     return (
 
         <View style={styles.mapContainer}>
-            <Text style={styles.gmapTitle}>Apple Map</Text>
+            <Text style={styles.title}>Apple Map</Text>
 
             <MapView style={styles.map}
                 initialRegion={{
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
         width: Dimensions.get('window').width,
         height: Dimensions.get('window').width,
     },
-    gmapTitle: {
+    title: {
         width: Dimensions.get('window').width,
         padding: 10,
         color: '#fff',
