@@ -12,19 +12,12 @@ import Slick from 'react-native-slick';
 import cat from './assets/cat.png';
 import dog from './assets/dog.png';
 import quokka from './assets/default.jpg';
-const MyTextInput = ({ value, name, type, onChange, placeholder }) => {
-  return (
-    <TextInput
-      value={value}
-      style={styles.input}
-      placeholder={placeholder}
-      placeholderTextColor={'#999'}
-      onChangeText={text => onChange({ name, type, text })}
-    />
-  );
-};
 
-export default function App () {
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+
+
+function HomeScreen ({ navigation }) {
   const [markers, setMarkers] = useState([]);
   const [inputs, setInputs] = useState({
     lat: '',
@@ -86,7 +79,7 @@ export default function App () {
 
   const floatBtnHandler = useCallback(
     () => {
-      console.log('Float')
+      navigation.navigate('Details')
     },
     []
   );
@@ -96,12 +89,10 @@ export default function App () {
     { id: 2, url: dog },
     { id: 3, url: quokka },
   ];
-
-
-
-
   return (
     <SafeAreaView style={styles.container}>
+
+
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <View style={styles.scroll}>
           <ScrollView contentContainerStyle={styles.listContainer}>
@@ -212,6 +203,53 @@ export default function App () {
 
 
     </SafeAreaView >
+  );
+}
+function DetailsScreen ({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <Text>Details Screen</Text>
+      <Button
+        title="Go to Details... again"
+        onPress={() => navigation.push('Details')}
+      />
+      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
+      <Button title="Go back" onPress={() => navigation.goBack()} />
+    </View>
+  );
+}
+const MyTextInput = ({ value, name, type, onChange, placeholder }) => {
+  return (
+    <TextInput
+      value={value}
+      style={styles.input}
+      placeholder={placeholder}
+      placeholderTextColor={'#999'}
+      onChangeText={text => onChange({ name, type, text })}
+    />
+  );
+};
+
+const Stack = createStackNavigator();
+
+export default function App () {
+  return (
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={HomeScreen} options={{
+          title: 'ARAON', headerStyle: {
+            backgroundColor: '#000',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+            fontSize: 20
+          },
+        }} />
+        <Stack.Screen name="Details" component={DetailsScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+
   );
 }
 
