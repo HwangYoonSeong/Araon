@@ -14,14 +14,9 @@ const Markers = ({ markers }) => {
                             latitude: (marker.lat * 1),
                             longitude: (marker.lng * 1),
                         }} />
-
                 )
-
                 )}
-
-
         </>
-
     );
 };
 
