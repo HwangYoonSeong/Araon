@@ -5,7 +5,7 @@ import axios from "axios";
 import {
   Button, SafeAreaView, StyleSheet, Text,
   TextInput, View, Dimensions, ScrollView,
-  KeyboardAvoidingView, Image
+  KeyboardAvoidingView, Image, TouchableOpacity
 } from 'react-native';
 import Markers from './components/Markers';
 import Slick from 'react-native-slick';
@@ -84,7 +84,12 @@ export default function App () {
     [inputs]
   );
 
-
+  const floatBtnHandler = useCallback(
+    () => {
+      console.log('Float')
+    },
+    []
+  );
 
   const items = [
     { id: 1, url: cat },
@@ -93,21 +98,23 @@ export default function App () {
   ];
 
 
+
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
         <View style={styles.scroll}>
           <ScrollView contentContainerStyle={styles.listContainer}>
             <View style={styles.mapContainer}>
-              <Text style={styles.gmapTitle}>Google Map</Text>
+              <Text style={styles.gmapTitle}>Apple Map</Text>
 
 
               <MapView style={styles.map}
                 initialRegion={{
                   latitude: 36.151416776192065,
                   longitude: 128.44983188999225,
-                  latitudeDelta: 5,
-                  longitudeDelta: 5,
+                  latitudeDelta: 1,
+                  longitudeDelta: 1,
                 }}
               >
 
@@ -134,7 +141,7 @@ export default function App () {
                   autoCorrect={false}
                 />
 
-                <View style={styles.button}>
+                <View style={styles.addBtn}>
                   <Button
                     onPress={addMarker}
                     title="ADD"
@@ -154,7 +161,7 @@ export default function App () {
                   autoCorrect={false}
                 />
 
-                <View style={styles.button}>
+                <View style={styles.addBtn}>
                   <Button
                     onPress={convertToCorp}
                     title="ADD"
@@ -165,12 +172,13 @@ export default function App () {
               </View>
             </View>
 
+            <Text style={styles.gmapTitle}>Slick Slider</Text>
 
             <Slick style={styles.wrapper}
               showsButtons={true}
               activeDotColor={'#3143e8'}
               dotColor={'white'}
-              autoplay={true}
+              autoplay={false}
               nextButton={<Text style={styles.buttonText}>›</Text>}
               prevButton={<Text style={styles.buttonText}>‹</Text>}>
 
@@ -185,6 +193,12 @@ export default function App () {
 
 
           </ScrollView>
+          <TouchableOpacity
+            onPress={floatBtnHandler}
+            activeOpacity={.5}
+            style={styles.floatBtn}>
+            <Text style={styles.floatBtntext}>Float</Text>
+          </TouchableOpacity>
 
         </View>
 
@@ -241,12 +255,29 @@ const styles = StyleSheet.create({
     fontSize: 24,
     marginLeft: 20,
   },
-  button: {
+  addBtn: {
     padding: 5,
     marginRight: 10,
     backgroundColor: '#3143e8',
     borderRadius: 50,
 
+  },
+  floatBtn: {
+    width: 80,
+    height: 80,
+    paddingTop: 28,
+    backgroundColor: 'red',
+    borderRadius: 50,
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+  },
+
+  floatBtntext: {
+    color: 'white',
+    textAlign: 'center',
+    fontWeight: 'bold',
+    fontSize: 20,
   },
   wrapper: {
     height: 300
