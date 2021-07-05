@@ -1,41 +1,31 @@
 import React, { useCallback } from 'react';
 import {
-    StyleSheet, Text,
+    StyleSheet, Text, SafeAreaView,
     View, ScrollView,
     TouchableOpacity
 } from 'react-native';
-
 import Maps from '../components/Maps';
 import Slider from '../components/Slider';
-
 export default function HomeScreen ({ navigation }) {
 
-    const floatBtnHandler = useCallback(
-        () => {
-            navigation.navigate('Details')
-        },
-        []
-    );
-
     return (
-        <View style={styles.scroll}>
+        <SafeAreaView style={{ backgroundColor: '#000', flex: 1 }}>
+
             <ScrollView contentContainerStyle={styles.listContainer}>
                 <Maps />
                 <Slider />
             </ScrollView>
-            <TouchableOpacity
-                onPress={floatBtnHandler}
-                activeOpacity={.5}
-                style={styles.floatBtn}>
-                <Text style={styles.floatBtntext}>Float</Text>
-            </TouchableOpacity>
 
-        </View>
+        </SafeAreaView>
+
     );
 }
 
 const styles = StyleSheet.create({
-
+    container: {
+        backgroundColor: '#000',
+        flex: 1
+    },
     listContainer: {
         alignItems: 'center',
     },
