@@ -5,18 +5,20 @@ import {
 } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+// import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Home from './screens/Home.js'
 import Detail from './screens/Detail.js'
 
-const Stack = createStackNavigator();
+// const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App () {
   return (
     <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
       <NavigationContainer>
-        <Stack.Navigator>
+        {/* <Stack.Navigator>
           <Stack.Screen name="Home" component={Home} options={{
             title: 'ARAON',
 
@@ -34,7 +36,27 @@ export default function App () {
             },
           }} />
           <Stack.Screen name="Details" component={Detail} />
-        </Stack.Navigator>
+        </Stack.Navigator> */}
+        <Tab.Navigator>
+          <Tab.Screen name="Home" component={Home} options={{
+            title: 'ARAON',
+
+            headerTitleAlign: 'left',
+            headerStyle: {
+              backgroundColor: '#000',
+              height: 100
+
+            },
+            headerTintColor: '#fff',
+            headerTitleStyle: {
+              fontWeight: 'bold',
+              fontSize: 20,
+
+            },
+          }} />
+          <Tab.Screen name="Details" component={Detail} />
+        </Tab.Navigator>
+
       </NavigationContainer>
 
     </KeyboardAvoidingView>

@@ -48,11 +48,11 @@ const Maps = () => {
                         }
                     })
                 .then((response) => {
-                    var corp = response.data.documents[0];
-                    console.log(response.data.documents[0]);
+                    var cord = response.data.documents[0];
+                    // console.log(response.data.documents[0]);
                     setMarkers([
                         ...markers,
-                        { lat: corp.y, lng: corp.x },
+                        { lat: cord.y, lng: cord.x },
 
                     ]);
 

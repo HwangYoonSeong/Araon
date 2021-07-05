@@ -18,7 +18,6 @@ export default function HomeScreen ({ navigation }) {
     );
 
     return (
-
         <View style={styles.scroll}>
             <ScrollView contentContainerStyle={styles.listContainer}>
                 <Maps />
@@ -36,10 +35,7 @@ export default function HomeScreen ({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        backgroundColor: '#fff',
-        flex: 1
-    },
+
     listContainer: {
         alignItems: 'center',
     },
