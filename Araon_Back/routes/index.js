@@ -18,19 +18,42 @@ router.get('/', function (req, res, next) {
 
 });
 
-/* TEST */
-router.get('/test', function (req, res) {
+router.post('/upload', function (req, res) {
   // res.json({ res: "Hello World" });
-  console.log("test1")
-  const query = new Query("SELECT * FROM users");
+  // console.log(req.body.base64);
+  // res.json({ res: "Hello World" });
+  const query = new Query(`INSERT INTO images (image) VALUES('${req.body.base64}')`);
   db.query(query)
-  console.log("test2")
+  // var rows = [];
+
+  // query.on("row", row => { rows.push(row); });
+
+  query.on('end', () => {
+    // console.log(rows);
+    console.log('query done');
+    // res.send(rows);
+    res.status(200).end();
+  });
+  query.on('error', err => {
+    console.error(err.stack);
+    res.send({ error: err });
+  });
+
+});
+
+
+router.get('/load', function (req, res) {
+  // res.json({ res: "Hello World" });
+  // console.log(req.body.base64);
+  // res.json({ res: "Hello World" });
+  const query = new Query(`SELECT image from images `);
+  db.query(query)
   var rows = [];
 
   query.on("row", row => { rows.push(row); });
 
   query.on('end', () => {
-    console.log(rows);
+    // console.log(rows);
     console.log('query done');
     res.send(rows);
     res.status(200).end();
@@ -41,6 +64,14 @@ router.get('/test', function (req, res) {
   });
 
 });
+
+
+/* TEST */
+router.get('/test', function (req, res) {
+  res.json({ res: "Hello World" });
+});
+
+
 
 
 module.exports = router;

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Button, StyleSheet, View, Text, TouchableOpacity, ActivityIndicator } from 'react-native';
 import * as ImageManipulator from 'expo-image-manipulator';
 import { ImageBrowser } from 'expo-image-picker-multiple';
 
@@ -21,7 +21,8 @@ export default class ImageBrowserScreen extends Component {
                 cPhotos.push({
                     uri: pPhoto.uri,
                     name: photo.filename,
-                    type: 'image/jpg'
+                    type: 'image/jpg',
+                    base64: pPhoto.base64
                 })
             }
             navigation.navigate('Main', { photos: cPhotos });
@@ -33,7 +34,7 @@ export default class ImageBrowserScreen extends Component {
         const file = await ImageManipulator.manipulateAsync(
             uri,
             [{ resize: { width: 1000 } }],
-            { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG }
+            { compress: 0.8, format: ImageManipulator.SaveFormat.JPEG, base64: true }
         );
         return file;
     };
@@ -41,7 +42,7 @@ export default class ImageBrowserScreen extends Component {
     _renderDoneButton = (count, onSubmit) => {
         if (!count) return null;
         return <TouchableOpacity title={'Done'} onPress={onSubmit}>
-            <Text onPress={onSubmit}>Done</Text>
+            <Button title="Done" onPress={onSubmit} />
         </TouchableOpacity>
     }
 
