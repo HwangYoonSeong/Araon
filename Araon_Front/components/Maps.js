@@ -10,7 +10,7 @@ import {
 
 import MapView from 'react-native-maps';
 import Markers from './Markers';
-import API_KEY from '../key';
+import KEY from '../key';
 
 const MyTextInput = ({ value, name, type, onChange, placeholder }) => {
     return (
@@ -44,7 +44,7 @@ const Maps = () => {
                 .get(`http://dapi.kakao.com/v2/local/search/address.json?query=${address}`,
                     {
                         headers: {
-                            Authorization: `KakaoAK ${API_KEY.kakao}`
+                            Authorization: `KakaoAK ${KEY.kakao}`
                         }
                     })
                 .then((response) => {
