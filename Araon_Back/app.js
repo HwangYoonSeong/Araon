@@ -16,9 +16,11 @@ const Query = require('pg').Query
 const port = process.env.PORT || 3000
 var app = express();
 app.use(fileupload());
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: 5000000 }));
 app.use(bodyParser.urlencoded({
-  extended: true
+  limit: 5000000,
+  extended: true,
+  parameterLimit: 50000
 }));
 
 app.post('/upload', parser, function (req, res) {

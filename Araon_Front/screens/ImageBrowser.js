@@ -17,6 +17,7 @@ export default class ImageBrowserScreen extends Component {
         callback.then(async (photos) => {
             const cPhotos = [];
             for (let photo of photos) {
+                // console.log(photo);
                 const pPhoto = await this._processImageAsync(photo.uri);
                 cPhotos.push({
                     uri: pPhoto.uri,
