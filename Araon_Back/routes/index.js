@@ -20,18 +20,15 @@ router.get('/', function (req, res, next) {
 
 router.post('/upload', function (req, res) {
   // res.json({ res: "Hello World" });
-  // console.log(req.body.base64);
-  // res.json({ res: "Hello World" });
-  const query = new Query(`INSERT INTO images (image) VALUES('${req.body.base64}')`);
+  // console.log(req.body);
+  const query = new Query(`INSERT INTO images (image) VALUES('${req.body.image}')`);
   db.query(query)
   // var rows = [];
 
   // query.on("row", row => { rows.push(row); });
 
   query.on('end', () => {
-    // console.log(rows);
     console.log('query done');
-    // res.send(rows);
     res.status(200).end();
   });
   query.on('error', err => {

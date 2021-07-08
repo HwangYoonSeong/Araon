@@ -30,31 +30,32 @@ export default class MainScreen extends Component {
             />
         )
     }
-    upload = () => {
+    formdata_upload = () => {
+        //form data 방식 base64 Image 전송 
+        var form = new FormData();
+        form.append("image", `form/data:image/jpg;base64,${this.state.photos[0].base64}`);
 
-        // //form data 방식 base64 Image 전송 
-        // var form = new FormData();
-        // form.append("image", `data:image/gif;base64,${this.state.photos[0].base64}`);
+        axios
+            .post(`${KEY.server}/upload`, form, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            })
+            .then((res) => {
+                console.log(res.status)
+            })
+            .catch((err) => {
+                console.error(err.response);
+            });
 
-        // axios
-        //     .post(`${KEY.server}/upload`, form, {
-        //         headers: {
-        //             "Content-Type": "multipart/form-data",
-        //         },
-        //     })
-        //     .then((res) => {
-        //         console.log(res.data)
-        //     })
-        //     .catch((err) => {
-        //         console.error(err.response);
-        //     });
+    };
 
-        let base64Img = `data:image/jpg;base64,${this.state.photos[0].base64}`
+    json_upload = () => {
+        //json 방식 base64 Image 전송 
+        let base64Img = `json/data:image/jpg;base64,${this.state.photos[0].base64}`
         let data = {
             "image": base64Img,
         }
-
-        //json 방식 base64 Image 전송 
         axios
             .post(`${KEY.server}/upload`, data, {
                 headers: {
@@ -64,19 +65,18 @@ export default class MainScreen extends Component {
             })
             .then((res) => {
                 // let data = await res.json();
-                console.log(res);
+                console.log(res.status);
             })
             .catch((err) => {
                 console.error(err);
             });
-    };
 
+    };
     load = () => {
         axios
             .get(`${KEY.server}/load`)
             .then((res) => {
-                console.log(res.data[0].image)
-                this.setState({ serverImg: res.data[0].image });
+                this.setState({ serverImg: res.data[0].image.substr(5) });
             })
             .catch((err) => {
                 console.error(err.response);
@@ -93,8 +93,13 @@ export default class MainScreen extends Component {
                     onPress={() => { navigate('ImageBrowser'); }}
                 />
                 <Button
-                    title="Upload"
-                    onPress={this.upload}
+                    title="formdata_upload"
+                    onPress={this.formdata_upload}
+                />
+
+                <Button
+                    title="json_upload"
+                    onPress={this.json_upload}
                 />
 
                 <Button
