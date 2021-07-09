@@ -3,7 +3,7 @@ import React from 'react';
 
 import {
     StyleSheet, Text,
-    View, Image, Dimensions,
+    View, Image, Dimensions, Button
 } from 'react-native';
 
 import Slick from 'react-native-slick';
@@ -12,16 +12,16 @@ import dog from '../assets/dog.png';
 import quokka from '../assets/default.jpg';
 
 
-const Slider = () => {
+const Slider = ({ images }) => {
     const items = [
         { id: 1, url: cat },
         { id: 2, url: dog },
         { id: 3, url: quokka },
     ];
+
     return (
         <>
             <Text style={styles.title}>Slick Slider</Text>
-
             <Slick style={styles.wrapper}
                 showsButtons={true}
                 activeDotColor={'#3143e8'}
@@ -30,14 +30,21 @@ const Slider = () => {
                 nextButton={<Text style={styles.buttonText}>›</Text>}
                 prevButton={<Text style={styles.buttonText}>‹</Text>}>
 
-                {items.map(item => {
+                {images.length ? (images.map((image, i) => {
+                    return (
+                        <View key={i}>
+                            <Image style={styles.img} source={{ uri: image }} />
+                        </View>
+                    );
+                })) : (items.map((item, i) => {
                     return (
                         <View key={item.id}>
                             <Image style={styles.img} source={item.url} />
                         </View>
                     );
-                })}
+                }))}
             </Slick>
+
         </>
     );
 };

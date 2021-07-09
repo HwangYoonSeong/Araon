@@ -42,15 +42,20 @@ export default function App () {
                 else if (route.name === 'Center') iconName = focused ? 'radio-button-on' : 'radio-button-on-outline';
                 else if (route.name === 'Menu2') iconName = focused ? 'grid' : 'grid-outline';
                 else if (route.name === 'Profile') iconName = focused ? 'person-circle' : 'person-circle-outline';
-                return <Ionicons name={iconName} size={size} color={color} />;
+                return <Ionicons
+                  name={iconName} size={size} color={color} />;
               }
             },
           })}
+
             tabBarOptions={{
               activeTintColor: '#3143e8',
               inactiveTintColor: 'gray',
               showLabel: false,
+              onTabPress: () => { console.log("Move1") }
             }}>
+
+
             <Tab.Screen name="Home" component={Home} options={{
               title: 'Home', tabBarBadge: 3
             }} />

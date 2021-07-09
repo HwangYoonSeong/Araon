@@ -1,10 +1,13 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Button, StyleSheet, Text,
     View, SafeAreaView
 } from 'react-native';
 
 export default function ProfileScreen ({ navigation }) {
+    useEffect(() => {
+        console.log("Pofile");
+    }, []);
     return (
         <SafeAreaView style={{ backgroundColor: '#000', flex: 1 }}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>

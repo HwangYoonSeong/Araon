@@ -49,7 +49,7 @@ const Maps = () => {
                     })
                 .then((response) => {
                     var cord = response.data.documents[0];
-                    // console.log(response.data.documents[0]);
+                    console.log(response.data.documents[0]);
                     setMarkers([
                         ...markers,
                         { lat: cord.y, lng: cord.x },
@@ -192,6 +192,7 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         fontSize: 24,
         marginLeft: 20,
+        color: "#fff"
     },
     addBtn: {
         padding: 5,

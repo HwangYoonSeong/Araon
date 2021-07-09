@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-    SafeAreaView
+    SafeAreaView, Button
 } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { NavigationContainer } from '@react-navigation/native';
@@ -9,7 +9,10 @@ import Main from './Main';
 import ImageBrowser from './ImageBrowser';
 
 const Stack = createStackNavigator();
-export default function Menu1Screen () {
+export default function Menu1Screen ({ navigation }) {
+    useEffect(() => {
+        console.log("Menu1");
+    }, []);
 
     return (
         <SafeAreaView style={{ backgroundColor: '#000', flex: 1 }}>

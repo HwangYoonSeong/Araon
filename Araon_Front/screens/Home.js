@@ -1,21 +1,41 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import {
-    StyleSheet, Text, SafeAreaView,
-    View, ScrollView,
-    TouchableOpacity
+    StyleSheet, SafeAreaView,
+    ScrollView,
+    Button
 } from 'react-native';
 import Maps from '../components/Maps';
 import Slider from '../components/Slider';
-export default function HomeScreen ({ navigation }) {
+import KEY from '../key';
+import axios from "axios";
+export default function HomeScreen ({ route, navigation }) {
+    const [imgs, setImgs] = useState([]);
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            axios
+                .get(`${KEY.server}/load`)
+                .then((res) => {
+                    var temp = [];
+                    res.data.map((item, i) => {
+                        temp.push(item.image.substr(5));
+                    })
+                    // console.log(temp);
+                    setImgs(temp);
+                })
+                .catch((err) => {
+                    console.error(err.response);
+                });
+        });
+        return unsubscribe;
+    }, [navigation]);
+
 
     return (
         <SafeAreaView style={{ backgroundColor: '#000', flex: 1 }}>
-
             <ScrollView contentContainerStyle={styles.listContainer}>
                 <Maps />
-                <Slider />
+                <Slider images={imgs} />
             </ScrollView>
-
         </SafeAreaView>
 
     );
