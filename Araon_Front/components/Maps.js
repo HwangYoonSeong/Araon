@@ -8,8 +8,11 @@ import {
 
 } from 'react-native';
 
-import MapView from 'react-native-maps';
-import Markers from './Markers';
+// import MapView from 'react-native-maps';
+import MapView from "react-native-map-clustering";
+// import Markers from './Markers';
+import { Marker } from 'react-native-maps';
+
 import KEY from '../key';
 
 const MyTextInput = ({ value, name, type, onChange, placeholder }) => {
@@ -49,7 +52,7 @@ const Maps = () => {
                     })
                 .then((response) => {
                     var cord = response.data.documents[0];
-                    console.log(response.data.documents[0]);
+                    // console.log(response.data.documents[0]);
                     setMarkers([
                         ...markers,
                         { lat: cord.y, lng: cord.x },
@@ -95,10 +98,21 @@ const Maps = () => {
                     longitude: 128.44983188999225,
                     latitudeDelta: 1,
                     longitudeDelta: 1,
+
                 }}
+
+                minZoomLevel={10.5}
+                clusterColor={'#3143e8'}
+                animationEnabled={false}
             >
 
-                <Markers markers={markers} />
+                {/* <Markers markers={markers} /> */}
+                <Marker coordinate={{ latitude: 36.151416776192065, longitude: 128.44983188999225 }} />
+                <Marker coordinate={{ latitude: 36.1512, longitude: 128.443 }} />
+                <Marker coordinate={{ latitude: 36.1485, longitude: 128.441 }} />
+                <Marker coordinate={{ latitude: 36.1482, longitude: 128.443 }} />
+                <Marker coordinate={{ latitude: 36.148, longitude: 128.442 }} />
+                <Marker coordinate={{ latitude: 36.149, longitude: 128.445 }} />
 
             </MapView>
 
@@ -151,7 +165,7 @@ const Maps = () => {
                 </View>
             </View>
 
-        </View>
+        </View >
 
 
 
