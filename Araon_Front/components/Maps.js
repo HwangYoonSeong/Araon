@@ -35,6 +35,10 @@ const Maps = () => {
         lng: '',
     });
 
+    const [location, setLocation] = useState({
+        latitude: 36.151416776192065,
+        longitude: 128.44983188999225,
+    });
     const [address, setaddress] = useState('');
 
     const onChangeAddress = Inputaddr => {
@@ -100,12 +104,35 @@ const Maps = () => {
                     longitudeDelta: 1,
 
                 }}
+                // onRegionChange={region => {
+                //     // setLocation({
+                //     //     latitude: region.latitude,
+                //     //     longitude: region.longitude,
+                //     // });
 
-                minZoomLevel={10.5}
+                //     console.log(region.latitude, region.longitude);
+                // }}
+                onRegionChangeComplete={region => {
+                    setLocation({
+                        latitude: region.latitude,
+                        longitude: region.longitude,
+                    });
+
+                    console.log('complete', region.latitude, region.longitude);
+                }}
+                minZoomLevel={11}
+                maxZoom={13}
                 clusterColor={'#3143e8'}
                 animationEnabled={false}
             >
-
+                <Marker
+                    coordinate={{
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                    }}
+                    title="this is a marker"
+                    description="this is a marker example"
+                />
                 {/* <Markers markers={markers} /> */}
                 <Marker coordinate={{ latitude: 36.151416776192065, longitude: 128.44983188999225 }} />
                 <Marker coordinate={{ latitude: 36.1512, longitude: 128.443 }} />
