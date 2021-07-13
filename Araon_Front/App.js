@@ -3,7 +3,7 @@ import KEY from './key';
 import axios from "axios";
 import {
   StyleSheet,
-  KeyboardAvoidingView, View, TouchableOpacity
+  KeyboardAvoidingView, View, TouchableOpacity, Text
 } from 'react-native';
 
 import { NavigationContainer } from '@react-navigation/native';
@@ -33,8 +33,9 @@ export default function App () {
                     navigation.navigate('Center')
                   }}
                   activeOpacity={.5}
-                  style={styles.floatBtn}>
-                  <View style={styles.floatBtntext}></View>
+                  style={styles.floatBtn}  >
+                  <Text style={{ color: focused ? '#3143e8' : '#868e96' }}><Ionicons
+                    name={'search'} style={styles.floatBtntext} /></Text>
                 </TouchableOpacity>;
               } else {
                 if (route.name === 'Home') iconName = focused ? 'ios-home' : 'ios-home-outline';
@@ -79,21 +80,24 @@ const styles = StyleSheet.create({
     flex: 1
   },
   floatBtn: {
-    width: 80,
-    height: 80,
-    backgroundColor: '#3143e8',
+    width: 60,
+    height: 60,
+    backgroundColor: 'white',
     borderRadius: 50,
     position: 'absolute',
-    bottom: 10,
-    paddingLeft: 15,
-    paddingTop: 16
+    bottom: 5,
+    paddingLeft: 11,
+    paddingTop: 10,
+
+    shadowColor: 'rgba(0,0,0, .4)', // IOS
+    shadowOffset: { height: 1, width: 1 }, // IOS
+    shadowOpacity: 1, // IOS
+    backgroundColor: '#fff',
+
   },
 
   floatBtntext: {
-    width: 50,
-    height: 50,
-    borderRadius: 50,
-    backgroundColor: 'black',
+    fontSize: 40
   },
 
 });
