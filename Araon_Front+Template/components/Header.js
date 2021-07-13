@@ -9,7 +9,7 @@ import materialTheme from '../constants/Theme';
 const { height, width } = Dimensions.get('window');
 const iPhoneX = () => Platform.OS === 'ios' && (height === 812 || width === 812 || height === 896 || width === 896);
 
-const ChatButton = ({isWhite, style, navigation}) => (
+const ChatButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
     <Icon
       family="GalioExtra"
@@ -21,7 +21,7 @@ const ChatButton = ({isWhite, style, navigation}) => (
   </TouchableOpacity>
 );
 
-const BasketButton = ({isWhite, style, navigation}) => (
+const BasketButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
     <Icon
       family="GalioExtra"
@@ -33,7 +33,7 @@ const BasketButton = ({isWhite, style, navigation}) => (
   </TouchableOpacity>
 );
 
-const SearchButton = ({isWhite, style, navigation}) => (
+const SearchButton = ({ isWhite, style, navigation }) => (
   <TouchableOpacity style={[styles.button, style]} onPress={() => navigation.navigate('Pro')}>
     <Icon
       size={16}
@@ -107,14 +107,14 @@ class Header extends React.Component {
   }
 
   renderSearch = () => {
-    const { navigation } = this.props;
+    // const { navigation } = this.props;
     return (
       <Input
         right
         color="black"
         style={styles.search}
         placeholder="What are you looking for?"
-        onFocus={() => navigation.navigate('Pro')}
+        // onFocus={() => navigation.navigate('Pro')}
         iconContent={<Icon size={16} color={theme.COLORS.MUTED} name="magnifying-glass" family="entypo" />}
       />
     )
@@ -125,18 +125,21 @@ class Header extends React.Component {
 
     return (
       <Block row style={styles.tabs}>
+
         <Button shadowless style={[styles.tab, styles.divider]} onPress={() => navigation.navigate('Pro')}>
           <Block row middle>
             <Icon name="grid" family="feather" style={{ paddingRight: 8 }} />
             <Text size={16} style={styles.tabTitle}>{tabTitleLeft || 'Categories'}</Text>
           </Block>
         </Button>
+
         <Button shadowless style={styles.tab} onPress={() => navigation.navigate('Pro')}>
           <Block row middle>
             <Icon size={16} name="camera-18" family="GalioExtra" style={{ paddingRight: 8 }} />
             <Text size={16} style={styles.tabTitle}>{tabTitleRight || 'Best Deals'}</Text>
           </Block>
         </Button>
+
       </Block>
     )
   }
@@ -154,7 +157,7 @@ class Header extends React.Component {
     return null;
   }
 
-  render() {
+  render () {
     const { back, title, white, transparent, navigation } = this.props;
     // const { routeName } = navigation.state;
     const noShadow = ["Search", "Categories", "Deals", "Pro", "Profile"].includes(title);
@@ -172,12 +175,12 @@ class Header extends React.Component {
           transparent={transparent}
           right={this.renderRight()}
           rightStyle={{ alignItems: 'center' }}
-          leftStyle={{ flex: 0.3, paddingTop: 2  }}
+          leftStyle={{ flex: 0.3, paddingTop: 2 }}
           leftIconName={(back ? 'chevron-left' : 'navicon')}
           leftIconColor={white ? theme.COLORS.WHITE : theme.COLORS.ICON}
           titleStyle={[
             styles.title,
-            {color: theme.COLORS[white ? 'WHITE' : 'ICON']},
+            { color: theme.COLORS[white ? 'WHITE' : 'ICON'] },
           ]}
           onLeftPress={this.handleLeftPress}
         />

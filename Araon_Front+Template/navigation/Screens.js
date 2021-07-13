@@ -23,13 +23,13 @@ const Drawer = createDrawerNavigator();
 
 const profile = {
   avatar: Images.Profile,
-  name: "Rachel Brown",
-  type: "Seller",
+  name: "Hwang Yoon Seong ",
+  type: "Developer",
   plan: "Pro",
   rating: 4.8
 };
 
-function ProfileStack(props) {
+function ProfileStack (props) {
   return (
     <Stack.Navigator initialRouteName="Profile" mode="card" headerMode="screen">
       <Stack.Screen
@@ -52,7 +52,7 @@ function ProfileStack(props) {
   );
 }
 
-function SettingsStack(props) {
+function SettingsStack (props) {
   return (
     <Stack.Navigator
       initialRouteName="Settings"
@@ -72,7 +72,7 @@ function SettingsStack(props) {
   );
 }
 
-function ComponentsStack(props) {
+function ComponentsStack (props) {
   return (
     <Stack.Navigator mode="card" headerMode="screen">
       <Stack.Screen
@@ -88,15 +88,15 @@ function ComponentsStack(props) {
   );
 }
 
-function HomeStack(props) {
+function HomeStack (props) {
   return (
     <Stack.Navigator mode="card" headerMode="screen">
-      <Stack.Screen 
+      <Stack.Screen
         name="Home"
         component={HomeScreen}
         options={{
           header: ({ navigation, scene }) => (
-            <Header 
+            <Header
               search
               tabs
               title="Home"
@@ -106,7 +106,7 @@ function HomeStack(props) {
           )
         }}
       />
-      <Stack.Screen 
+      <Stack.Screen
         name="Pro"
         component={ProScreen}
         options={{
@@ -120,7 +120,7 @@ function HomeStack(props) {
   );
 }
 
-function AppStack(props) {
+function AppStack (props) {
   return (
     <Drawer.Navigator
       style={{ flex: 1 }}
@@ -282,7 +282,7 @@ function AppStack(props) {
         }}
       />
       <Drawer.Screen
-        name="Sign Up"
+        name="Sign Upp"
         component={ProScreen}
         options={{
           drawerIcon: ({ focused }) => (
@@ -299,16 +299,16 @@ function AppStack(props) {
   );
 }
 
-export default function OnboardingStack(props) {
+export default function OnboardingStack (props) {
   return (
     <Stack.Navigator mode="card" headerMode="none">
-      <Stack.Screen
+      {/* <Stack.Screen
         name="Onboarding"
         component={OnboardingScreen}
         option={{
           headerTransparent: true
         }}
-      />
+      /> */}
       <Stack.Screen name="App" component={AppStack} />
     </Stack.Navigator>
   );
@@ -369,7 +369,7 @@ const HomeStack = createStackNavigator({
   },
 },
 {
-  cardStyle: { 
+  cardStyle: {
     backgroundColor: '#EEEEEE', //this is the backgroundColor for the app
   },
   transitionConfig,

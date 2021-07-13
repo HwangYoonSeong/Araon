@@ -37,7 +37,7 @@ const assetImages = [
 // cache product images
 products.map(product => assetImages.push(product.image));
 
-function cacheImages(images) {
+function cacheImages (images) {
   return images.map(image => {
     if (typeof image === 'string') {
       return Image.prefetch(image);
@@ -52,7 +52,7 @@ export default class App extends React.Component {
     isLoadingComplete: false,
   };
 
-  render() {
+  render () {
     if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
         <AppLoading
