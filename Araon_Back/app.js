@@ -7,7 +7,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var fileupload = require("express-fileupload");
 
-var db = require('./db');
+var db = require('./config/db');
 const port = process.env.PORT || 3000
 var app = express();
 

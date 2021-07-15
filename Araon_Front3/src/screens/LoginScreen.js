@@ -39,6 +39,7 @@ export default function LoginScreen ({ navigation }) {
       // let data = await res.json();
       if (res.status === 200) {
         console.log("Login");
+        console.log(res.data);
         navigation.reset({
           index: 0,
           routes: [{ name: 'Dashboard' }],
