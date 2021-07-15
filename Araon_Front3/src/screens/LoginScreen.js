@@ -8,25 +8,50 @@ import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
-import { emailValidator } from '../helpers/emailValidator'
-import { passwordValidator } from '../helpers/passwordValidator'
+// import { emailValidator } from '../helpers/emailValidator'
+// import { passwordValidator } from '../helpers/passwordValidator'
+import KEY from '../key';
+import axios from "axios";
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen ({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
 
   const onLoginPressed = () => {
-    const emailError = emailValidator(email.value)
-    const passwordError = passwordValidator(password.value)
-    if (emailError || passwordError) {
-      setEmail({ ...email, error: emailError })
-      setPassword({ ...password, error: passwordError })
-      return
+    // const emailError = emailValidator(email.value)
+    // const passwordError = passwordValidator(password.value)
+    // if (emailError || passwordError) {
+    //   setEmail({ ...email, error: emailError })
+    //   setPassword({ ...password, error: passwordError })
+    //   return
+    // }
+
+    let data = {
+      "id": email.value,
+      "pw": password.value
     }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Dashboard' }],
+
+    axios.post(`${KEY.server}/login`, data, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).then((res) => {
+      // let data = await res.json();
+      if (res.status === 200) {
+        console.log("Login");
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Dashboard' }],
+        })
+      }
     })
+      .catch((err) => {
+        if (err.response.status === 400) {
+          console.log("아이디 혹은 비밀번호가 일치 하지 않습니다.");
+        } else if (err.response.status === 500) {
+          console.log("통신에 문제가 생겼습니다. 다시 시도해주세요.");
+        }
+      });
   }
 
   return (
@@ -39,20 +64,20 @@ export default function LoginScreen({ navigation }) {
         returnKeyType="next"
         value={email.value}
         onChangeText={(text) => setEmail({ value: text, error: '' })}
-        error={!!email.error}
-        errorText={email.error}
+        // error={!!email.error}
+        // errorText={email.error}
         autoCapitalize="none"
-        autoCompleteType="email"
-        textContentType="emailAddress"
-        keyboardType="email-address"
+      // autoCompleteType="email"
+      // textContentType="emailAddress"
+      // keyboardType="email-address"
       />
       <TextInput
         label="Password"
         returnKeyType="done"
         value={password.value}
         onChangeText={(text) => setPassword({ value: text, error: '' })}
-        error={!!password.error}
-        errorText={password.error}
+        // error={!!password.error}
+        // errorText={password.error}
         secureTextEntry
       />
       <View style={styles.forgotPassword}>
