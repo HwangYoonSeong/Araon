@@ -14,14 +14,43 @@ import { theme } from '../core/theme'
 import KEY from '../key';
 import axios from "axios";
 
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { setToken } from "../../reducer/token";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen ({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
   const [isSelected, setSelection] = useState(false);
 
+  const token = useSelector((state) => state.token);
+
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@storage_Key')
+      if (value !== null) {
+        // value previously stored
+        console.log(value);
+      } else {
+        console.log(value);
+      }
+    } catch (e) {
+      // error reading value
+      console.log(e);
+    }
+  }
+
+
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem('@storage_Key', value)
+    } catch (e) {
+      // saving error
+      console.log(e);
+    }
+  }
   const dispatch = useDispatch();
   const onLoginPressed = () => {
     // email 형식으로 입력 
@@ -52,6 +81,11 @@ export default function LoginScreen ({ navigation }) {
           index: 0,
           routes: [{ name: 'Dashboard' }],
         })
+
+        if (isSelected) {
+          console.log('AutoLogin')
+          storeData('token')
+        }
       }
     })
       .catch((err) => {
@@ -61,6 +95,12 @@ export default function LoginScreen ({ navigation }) {
           console.log("통신에 문제가 생겼습니다. 다시 시도해주세요.");
         }
       });
+  }
+
+  const onSignUpPressed = () => {
+    console.log('SignUp');
+    getData();
+    navigation.replace('RegisterScreen')
   }
 
   return (
@@ -90,8 +130,6 @@ export default function LoginScreen ({ navigation }) {
         secureTextEntry
       />
 
-
-
       <View style={styles.forgotPassword}>
         <CheckBox
           checked={isSelected}
@@ -115,7 +153,7 @@ export default function LoginScreen ({ navigation }) {
 
       <View style={styles.row}>
         <Text>Don’t have an account? </Text>
-        <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
+        <TouchableOpacity onPress={onSignUpPressed}>
           <Text style={styles.link}>Sign up</Text>
         </TouchableOpacity>
       </View>

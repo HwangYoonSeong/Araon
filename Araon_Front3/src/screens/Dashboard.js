@@ -9,14 +9,32 @@ import Button from '../components/Button'
 import { useSelector, useDispatch } from "react-redux";
 import { setToken } from "../../reducer/token";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function Dashboard ({ navigation }) {
   const token = useSelector((state) => state.token);
   const dispatch = useDispatch();
 
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@storage_Key')
+      if (value !== null) {
+        // value previously stored
+        console.log(value);
+      } else {
+        console.log(value);
+      }
+    } catch (e) {
+      // error reading value
+      console.log(e);
+    }
+  }
+
   const onLogoutPressed = () => {
     //local or session storage에 있는 token 제거 
-
-    console.log(token);
+    getData();
+    // console.log(token);
     dispatch(setToken(''));
     navigation.reset({
       index: 0,
