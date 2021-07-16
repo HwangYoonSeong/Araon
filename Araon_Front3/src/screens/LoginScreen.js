@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { TouchableOpacity, StyleSheet, View } from 'react-native'
 import { Text } from 'react-native-paper'
+import { CheckBox } from 'react-native-elements'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
@@ -13,12 +14,13 @@ import { theme } from '../core/theme'
 import KEY from '../key';
 import axios from "axios";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { setToken } from "../../reducer/token";
 
 export default function LoginScreen ({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
+  const [isSelected, setSelection] = useState(false);
 
   const dispatch = useDispatch();
   const onLoginPressed = () => {
@@ -87,16 +89,30 @@ export default function LoginScreen ({ navigation }) {
         // errorText={password.error}
         secureTextEntry
       />
+
+
+
       <View style={styles.forgotPassword}>
+        <CheckBox
+          checked={isSelected}
+          onPress={() => setSelection(!isSelected)}
+          checkedColor='#51cf66'
+          title='keep me loged in'
+          containerStyle={{ backgroundColor: 'transparent', borderWidth: 0, padding: 0, margin: 0, marginLeft: 0 }}
+          textStyle={{ color: theme.colors.primary, marginLeft: 0 }}
+        />
+
         <TouchableOpacity
           onPress={() => navigation.navigate('ResetPasswordScreen')}
         >
           <Text style={styles.forgot}>Forgot your password?</Text>
         </TouchableOpacity>
       </View>
+
       <Button mode="contained" onPress={onLoginPressed}>
         Login
       </Button>
+
       <View style={styles.row}>
         <Text>Don’t have an account? </Text>
         <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
@@ -108,9 +124,15 @@ export default function LoginScreen ({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  forgotPassword: {
+  autoLogin: {
     width: '100%',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
+  },
+
+  forgotPassword: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
     marginBottom: 24,
   },
   row: {
@@ -119,10 +141,13 @@ const styles = StyleSheet.create({
   },
   forgot: {
     fontSize: 13,
+    marginTop: 3,
     color: theme.colors.secondary,
   },
   link: {
     fontWeight: 'bold',
     color: theme.colors.primary,
   },
+
+
 })
