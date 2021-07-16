@@ -4,8 +4,27 @@ import Logo from '../components/Logo'
 import Header from '../components/Header'
 import Paragraph from '../components/Paragraph'
 import Button from '../components/Button'
+// import KEY from '../key';
+// import axios from "axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setToken } from "../../reducer/token";
 
-export default function Dashboard({ navigation }) {
+export default function Dashboard ({ navigation }) {
+  const token = useSelector((state) => state.token);
+  const dispatch = useDispatch();
+
+  const onLogoutPressed = () => {
+    //local or session storage에 있는 token 제거 
+
+    console.log(token);
+    dispatch(setToken(''));
+    navigation.reset({
+      index: 0,
+      routes: [{ name: 'StartScreen' }],
+    })
+
+  }
+
   return (
     <Background>
       <Logo />
@@ -16,12 +35,7 @@ export default function Dashboard({ navigation }) {
       </Paragraph>
       <Button
         mode="outlined"
-        onPress={() =>
-          navigation.reset({
-            index: 0,
-            routes: [{ name: 'StartScreen' }],
-          })
-        }
+        onPress={onLogoutPressed}
       >
         Logout
       </Button>

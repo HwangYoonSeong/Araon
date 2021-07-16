@@ -13,11 +13,16 @@ import { theme } from '../core/theme'
 import KEY from '../key';
 import axios from "axios";
 
+import { useSelector, useDispatch } from "react-redux";
+import { setToken } from "../../reducer/token";
+
 export default function LoginScreen ({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
 
+  const dispatch = useDispatch();
   const onLoginPressed = () => {
+    // email 형식으로 입력 
     // const emailError = emailValidator(email.value)
     // const passwordError = passwordValidator(password.value)
     // if (emailError || passwordError) {
@@ -39,7 +44,8 @@ export default function LoginScreen ({ navigation }) {
       // let data = await res.json();
       if (res.status === 200) {
         console.log("Login");
-        console.log(res.data);
+        // console.log(res.data.token);
+        dispatch(setToken(res.data.token));
         navigation.reset({
           index: 0,
           routes: [{ name: 'Dashboard' }],
