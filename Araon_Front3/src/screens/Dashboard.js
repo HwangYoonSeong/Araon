@@ -19,14 +19,20 @@ export default function Dashboard ({ navigation }) {
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('@storage_Key')
-      if (value !== null) {
-        // value previously stored
-        console.log(value);
-      } else {
-        console.log(value);
-      }
+      console.log(value);
+
     } catch (e) {
       // error reading value
+      console.log(e);
+    }
+  }
+
+
+  const storeData = async (value) => {
+    try {
+      await AsyncStorage.setItem('@storage_Key', value)
+    } catch (e) {
+      // saving error
       console.log(e);
     }
   }
@@ -34,8 +40,9 @@ export default function Dashboard ({ navigation }) {
   const onLogoutPressed = () => {
     //local or session storage에 있는 token 제거 
     getData();
-    // console.log(token);
-    dispatch(setToken(''));
+    console.log(token);
+    dispatch(setToken('')); // Session Token 삭제 
+    storeData('') // Local Token 삭제 
     navigation.reset({
       index: 0,
       routes: [{ name: 'StartScreen' }],

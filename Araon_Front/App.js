@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react';
-import KEY from './key';
-import axios from "axios";
 import {
   StyleSheet,
   KeyboardAvoidingView, View, TouchableOpacity, Text

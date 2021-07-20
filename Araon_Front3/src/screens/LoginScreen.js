@@ -23,9 +23,7 @@ export default function LoginScreen ({ navigation }) {
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
   const [isSelected, setSelection] = useState(false);
-
   const token = useSelector((state) => state.token);
-
 
   const getData = async () => {
     try {
@@ -41,7 +39,6 @@ export default function LoginScreen ({ navigation }) {
       console.log(e);
     }
   }
-
 
   const storeData = async (value) => {
     try {
@@ -76,15 +73,15 @@ export default function LoginScreen ({ navigation }) {
       if (res.status === 200) {
         console.log("Login");
         // console.log(res.data.token);
-        dispatch(setToken(res.data.token));
+        dispatch(setToken(res.data.token)); // Session Token 등록
         navigation.reset({
           index: 0,
           routes: [{ name: 'Dashboard' }],
         })
 
-        if (isSelected) {
+        if (isSelected) { // 자동 로그인이 체크되어 있다면 
           console.log('AutoLogin')
-          storeData('token')
+          storeData('token'.concat(res.data.token)) // Local Token 등록 
         }
       }
     })
