@@ -1,4 +1,9 @@
 import React from 'react'
+import {
+  StyleSheet,
+  KeyboardAvoidingView, View, TouchableOpacity, Text
+} from 'react-native';
+
 import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
@@ -11,59 +16,143 @@ import { setToken } from "../../reducer/token";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+
+import Home from './dscreens/Home.js'
+import Menu1 from './dscreens/Menu1.js'
+import Center from './dscreens/Center.js'
+import Menu2 from './dscreens/Menu2.js'
+import Profile from './dscreens/Profile.js'
+
 export default function Dashboard ({ navigation }) {
-  const token = useSelector((state) => state.token);
-  const dispatch = useDispatch();
+  // const token = useSelector((state) => state.token);
+  // const dispatch = useDispatch();
 
+  // const getData = async () => {
+  //   try {
+  //     const value = await AsyncStorage.getItem('@storage_Key')
+  //     console.log(value);
 
-  const getData = async () => {
-    try {
-      const value = await AsyncStorage.getItem('@storage_Key')
-      console.log(value);
+  //   } catch (e) {
+  //     // error reading value
+  //     console.log(e);
+  //   }
+  // }
+  // const storeData = async (value) => {
+  //   try {
+  //     await AsyncStorage.setItem('@storage_Key', value)
+  //   } catch (e) {
+  //     // saving error
+  //     console.log(e);
+  //   }
+  // }
 
-    } catch (e) {
-      // error reading value
-      console.log(e);
-    }
-  }
+  // const onLogoutPressed = () => {
+  //   //local or session storage에 있는 token 제거 
+  //   getData();
+  //   console.log(token);
+  //   dispatch(setToken('')); // Session Token 삭제 
+  //   storeData('') // Local Token 삭제 
+  //   navigation.reset({
+  //     index: 0,
+  //     routes: [{ name: 'StartScreen' }],
+  //   })
+  // }
 
+  // function HomeScreen () {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+  //       <Text>Home!</Text>
+  //       <Button
+  //         mode="outlined"
+  //         onPress={onLogoutPressed}
+  //       >
+  //         Logout
+  //       </Button>
+  //     </View>
+  //   );
+  // }
 
-  const storeData = async (value) => {
-    try {
-      await AsyncStorage.setItem('@storage_Key', value)
-    } catch (e) {
-      // saving error
-      console.log(e);
-    }
-  }
+  // function SettingsScreen () {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+  //       <Text>Settings!</Text>
+  //     </View>
+  //   );
+  // }
 
-  const onLogoutPressed = () => {
-    //local or session storage에 있는 token 제거 
-    getData();
-    console.log(token);
-    dispatch(setToken('')); // Session Token 삭제 
-    storeData('') // Local Token 삭제 
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'StartScreen' }],
-    })
-
-  }
-
+  const Tab = createBottomTabNavigator();
   return (
-    <Background>
-      <Logo />
-      <Header>Let’s start</Header>
-      <Paragraph>
-        Your amazing app starts here. Open you favorite code editor and start
-        editing this project.
-      </Paragraph>
-      <Button
-        mode="outlined"
-        onPress={onLogoutPressed}
-      >
-        Logout
-      </Button>
-    </Background>
+    <Tab.Navigator screenOptions={({ route, navigation }) => ({
+      tabBarIcon: ({ focused, color, size }) => {
+        let iconName;
+        if (route.name === 'Center') {
+          return <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('Center')
+            }}
+            activeOpacity={.5}
+            style={styles.floatBtn}  >
+            <Text style={{ color: focused ? '#3143e8' : '#868e96' }}><Ionicons
+              name={'search'} style={styles.floatBtntext} /></Text>
+          </TouchableOpacity>;
+        } else {
+          if (route.name === 'Home') iconName = focused ? 'ios-home' : 'ios-home-outline';
+          else if (route.name === 'Menu1') iconName = focused ? 'ios-images' : 'ios-images-outline';
+          else if (route.name === 'Center') iconName = focused ? 'radio-button-on' : 'radio-button-on-outline';
+          else if (route.name === 'Menu2') iconName = focused ? 'grid' : 'grid-outline';
+          else if (route.name === 'Profile') iconName = focused ? 'person-circle' : 'person-circle-outline';
+          return <Ionicons
+            name={iconName} size={size} color={color} />;
+        }
+      },
+    })}
+
+      tabBarOptions={{
+        activeTintColor: '#3143e8',
+        inactiveTintColor: 'gray',
+        showLabel: false,
+        onTabPress: () => { console.log("Move1") }
+      }}>
+
+      <Tab.Screen name="Home" component={Home} options={{
+        title: 'Home', tabBarBadge: 3
+      }} />
+      <Tab.Screen name="Menu1" component={Menu1} />
+      <Tab.Screen name="Center" component={Center} />
+      <Tab.Screen name="Menu2" component={Menu2} />
+      <Tab.Screen name="Profile" component={Profile} />
+    </Tab.Navigator>
+
   )
 }
+
+
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: '#fff',
+    flex: 1
+  },
+  floatBtn: {
+    width: 60,
+    height: 60,
+    backgroundColor: 'white',
+    borderRadius: 50,
+    position: 'absolute',
+    bottom: 5,
+    paddingLeft: 11,
+    paddingTop: 10,
+
+    shadowColor: 'rgba(0,0,0, .4)', // IOS
+    shadowOffset: { height: 1, width: 1 }, // IOS
+    shadowOpacity: 1, // IOS
+    backgroundColor: '#fff',
+
+  },
+
+  floatBtntext: {
+    fontSize: 40
+  },
+
+});
