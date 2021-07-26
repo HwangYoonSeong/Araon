@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { TouchableOpacity, StyleSheet, View } from 'react-native'
+import { StatusBar } from 'expo-status-bar';
 import { Text } from 'react-native-paper'
 import { CheckBox } from 'react-native-elements'
 import Background from '../components/Background'
@@ -102,6 +103,7 @@ export default function LoginScreen ({ navigation }) {
 
   return (
     <Background>
+      <StatusBar style="dark" />
       <BackButton goBack={navigation.goBack} />
       <Logo />
       <Header>Welcome back.</Header>
@@ -155,10 +157,12 @@ export default function LoginScreen ({ navigation }) {
         </TouchableOpacity>
       </View>
     </Background>
+
   )
 }
 
 const styles = StyleSheet.create({
+
   autoLogin: {
     width: '100%',
     alignItems: 'flex-start',

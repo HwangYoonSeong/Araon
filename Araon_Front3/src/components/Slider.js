@@ -58,7 +58,6 @@ const styles = StyleSheet.create({
         fontWeight: '300',
         textAlign: 'center',
         backgroundColor: '#3143e8',
-        marginTop: 20
     },
 
     wrapper: {
