@@ -57,7 +57,7 @@ router.post('/login', function (req, res) {
       },
         secretKey.secret,
         {
-          expiresIn: '1h'
+          expiresIn: '8d'
         });
       res.status(200).json({
         status: 'success',
@@ -68,6 +68,30 @@ router.post('/login', function (req, res) {
     }
 
   })
+});
+
+router.get('/verifytoken', function (req, res) {
+  const token = req.header('token');
+  console.log("TOKEN" + token)
+  if (token == undefined) res.status(401).json({ status: "tokenMissing" })
+  try {
+    const decoded = jwt.verify(token, secretKey.secret);
+    if (decoded) {
+      res.locals.id = decoded.id
+      res.locals.time = decoded.time
+      res.status(200).json({
+        id: decoded.id,
+        time: decoded.time
+      })
+    }
+    else {
+      res.status(500).json({ status: "unauthorized" });
+    }
+  }
+  catch (err) {
+    console.log(err);
+    res.status(401).json({ status: "tokenExpired" });
+  }
 });
 
 /* TEST */

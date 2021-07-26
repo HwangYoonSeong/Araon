@@ -10,21 +10,30 @@ import axios from "axios";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function StartScreen ({ navigation }) {
 
-
   useEffect(() => { // AsyncStorage에 Token이 존재 시 자동 로그인 요청 
     autoLogin();
     console.log("StartScreen");
   }, []);
 
-  // 지금 이상황은 뭐지 생성은 아니고 조회에 가까운데 사실 
-  // user data 에 token이 저장되는건 아니고 local에 있는 token으로 서버에 요청해서 
-  // 
   const autoLogin = async () => {
     try {
       const token = await AsyncStorage.getItem('@storage_Key')
-      if (token) { //token이 존재할 경우 
-        console.log(token);
-        navigation.navigate('Dashboard')
+      if (token) { //token이 존재할 경우 verifyToken
+        axios
+          .get(`${KEY.server}/verifytoken`, {
+            headers: {
+              token: token
+            },
+          })
+          .then((res) => {
+            console.log(res.data);
+            navigation.replace('Dashboard')
+          })
+          .catch((err) => {
+            if (err.response.status === 401) {
+              alert("세션이 만료되어 홈 화면으로 이동합니다.");
+            }
+          });
       }
     } catch (e) {
       // error reading value

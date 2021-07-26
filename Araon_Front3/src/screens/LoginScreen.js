@@ -81,7 +81,7 @@ export default function LoginScreen ({ navigation }) {
 
         if (isSelected) { // 자동 로그인이 체크되어 있다면 
           console.log('AutoLogin')
-          storeData('token'.concat(res.data.token)) // Local Token 등록 
+          storeData(res.data.token) // Local Token 등록 
         }
       }
     })
