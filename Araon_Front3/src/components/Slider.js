@@ -3,7 +3,7 @@ import React from 'react';
 
 import {
     StyleSheet, Text,
-    View, Image, Dimensions, Button
+    View, Image, Button
 } from 'react-native';
 
 import Slick from 'react-native-slick';
@@ -21,7 +21,6 @@ const Slider = ({ images }) => {
 
     return (
         <>
-            <Text style={styles.title}>Slick Slider</Text>
             <Slick style={styles.wrapper}
                 showsButtons={true}
                 activeDotColor={'#3143e8'}
@@ -50,15 +49,6 @@ const Slider = ({ images }) => {
 };
 
 const styles = StyleSheet.create({
-    title: {
-        width: Dimensions.get('window').width,
-        padding: 10,
-        color: '#fff',
-        fontSize: 36,
-        fontWeight: '300',
-        textAlign: 'center',
-        backgroundColor: '#3143e8',
-    },
 
     wrapper: {
         height: 300

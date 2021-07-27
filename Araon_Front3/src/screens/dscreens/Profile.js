@@ -46,7 +46,7 @@ export default function ProfileScreen ({ navigation }) {
         })
     }
     return (
-        <SafeAreaView style={{ backgroundColor: '#000', flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={{ color: '#3143e8', fontSize: 30 }}>Profile Screen</Text>
                 <Button

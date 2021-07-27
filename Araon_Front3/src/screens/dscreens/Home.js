@@ -44,7 +44,6 @@ export default function HomeScreen ({ route, navigation }) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
         flex: 1
     },
     listContainer: {

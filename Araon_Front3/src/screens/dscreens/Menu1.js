@@ -15,7 +15,7 @@ export default function Menu1Screen ({ navigation }) {
     }, []);
 
     return (
-        <SafeAreaView style={{ backgroundColor: '#000', flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
             {/* <NavigationContainer independent={true}>
                 <Stack.Navigator initialRouteName='Main'>
                     <Stack.Screen name='Main' component={Main} />

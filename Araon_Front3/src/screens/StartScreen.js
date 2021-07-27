@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react'
+import { StatusBar } from 'expo-status-bar';
 import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
@@ -43,6 +44,7 @@ export default function StartScreen ({ navigation }) {
 
   return (
     <Background>
+      <StatusBar style="dark" />
       <Logo />
       <Header>Login Template</Header>
       <Paragraph>

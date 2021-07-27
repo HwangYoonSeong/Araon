@@ -9,7 +9,7 @@ export default function Menu2Screen ({ navigation }) {
         console.log("Menu2");
     }, []);
     return (
-        <SafeAreaView style={{ backgroundColor: '#000', flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
                 <Text style={{ color: '#3143e8', fontSize: 30 }}>Menu2 Screen</Text>
                 <Button

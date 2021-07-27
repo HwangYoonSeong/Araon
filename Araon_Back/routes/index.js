@@ -72,7 +72,7 @@ router.post('/login', function (req, res) {
 
 router.get('/verifytoken', function (req, res) {
   const token = req.header('token');
-  console.log("TOKEN" + token)
+  console.log("TOKEN: " + token)
   if (token == undefined) res.status(401).json({ status: "tokenMissing" })
   try {
     const decoded = jwt.verify(token, secretKey.secret);
