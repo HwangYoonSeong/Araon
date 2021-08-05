@@ -1,8 +1,6 @@
-import React, { useCallback, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-    StyleSheet, SafeAreaView,
-    ScrollView,
-    View, Text
+    StyleSheet, ScrollView,
 } from 'react-native';
 // import Maps from '../components/Maps';
 import Slider from '../../components/Slider';
@@ -32,24 +30,18 @@ export default function HomeScreen ({ route, navigation }) {
 
 
     return (
-        <SafeAreaView style={styles.container}>
-            <ScrollView contentContainerStyle={styles.listContainer}>
-                {/* <Maps /> */}
-                <Slider images={imgs} />
-            </ScrollView>
-        </SafeAreaView>
+        <ScrollView contentContainerStyle={styles.listContainer}>
+            {/* <Maps /> */}
+            <Slider images={imgs} />
+        </ScrollView>
 
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
     listContainer: {
         alignItems: 'center',
     }
-
 
 });
 

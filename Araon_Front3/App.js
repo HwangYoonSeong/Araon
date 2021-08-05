@@ -1,4 +1,7 @@
 import React from 'react'
+import {
+  StyleSheet, SafeAreaView,
+} from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -22,7 +25,7 @@ const Stack = createStackNavigator()
 
 export default function App () {
   return (
-    <SafeAreaProvider>
+    <SafeAreaView style={styles.container}>
       <PaperProvider theme={theme}>
         <Provider store={store}>
           <NavigationContainer>
@@ -44,7 +47,13 @@ export default function App () {
           </NavigationContainer>
         </Provider>
       </PaperProvider>
-    </SafeAreaProvider>
+    </SafeAreaView >
 
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+});

@@ -1,8 +1,8 @@
 import React from 'react'
 import {
-  StyleSheet, TouchableOpacity, Text, Dimensions, View, Button
+  StyleSheet, TouchableOpacity, Text, SafeAreaView, Dimensions, View, Button, StatusBar
 } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+// import { StatusBar } from 'expo-status-bar';
 // import KEY from '../key';
 // import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
@@ -21,9 +21,10 @@ import Profile from './dscreens/Profile.js'
 
 export default function Dashboard ({ navigation }) {
   const Tab = createBottomTabNavigator();
+  StatusBar.setBarStyle("dark-content");
   return (
     <>
-      <StatusBar style="dark" />
+      <StatusBar />
       <View style={styles.navbar}>
         <Text style={styles.title}>Araon</Text>
         <TouchableOpacity>
@@ -81,10 +82,6 @@ export default function Dashboard ({ navigation }) {
 
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    flex: 1
-  },
   title: {
     color: '#3143e8',
     fontSize: 25,
@@ -120,6 +117,6 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingBottom: 10,
     backgroundColor: 'white',
-    height: 80
+    height: 40,
   },
 });
