@@ -22,12 +22,13 @@ const Slider = ({ images }) => {
     return (
         <>
             <Slick style={styles.wrapper}
-                showsButtons={true}
+                // showsButtons={true}
                 activeDotColor={'#3143e8'}
                 dotColor={'white'}
                 autoplay={false}
-                nextButton={<Text style={styles.buttonText}>›</Text>}
-                prevButton={<Text style={styles.buttonText}>‹</Text>}>
+            // nextButton={<Text style={styles.buttonText}>›</Text>}
+            // prevButton={<Text style={styles.buttonText}>‹</Text>}
+            >
 
                 {images.length ? (images.map((image, i) => {
                     return (

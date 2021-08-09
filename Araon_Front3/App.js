@@ -1,6 +1,6 @@
 import React from 'react'
 import {
-  StyleSheet, SafeAreaView,
+  StyleSheet, SafeAreaView, KeyboardAvoidingView
 } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper'
 import { NavigationContainer } from '@react-navigation/native'
@@ -25,28 +25,31 @@ const Stack = createStackNavigator()
 
 export default function App () {
   return (
+
     <SafeAreaView style={styles.container}>
-      <PaperProvider theme={theme}>
-        <Provider store={store}>
-          <NavigationContainer>
-            <Stack.Navigator
-              initialRouteName="StartScreen"
-              screenOptions={{
-                headerShown: false,
-              }}
-            >
-              <Stack.Screen name="StartScreen" component={StartScreen} />
-              <Stack.Screen name="LoginScreen" component={LoginScreen} />
-              <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-              <Stack.Screen name="Dashboard" component={Dashboard} />
-              <Stack.Screen
-                name="ResetPasswordScreen"
-                component={ResetPasswordScreen}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </Provider>
-      </PaperProvider>
+      <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
+        <PaperProvider theme={theme}>
+          <Provider store={store}>
+            <NavigationContainer>
+              <Stack.Navigator
+                initialRouteName="StartScreen"
+                screenOptions={{
+                  headerShown: false,
+                }}
+              >
+                <Stack.Screen name="StartScreen" component={StartScreen} />
+                <Stack.Screen name="LoginScreen" component={LoginScreen} />
+                <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+                <Stack.Screen name="Dashboard" component={Dashboard} />
+                <Stack.Screen
+                  name="ResetPasswordScreen"
+                  component={ResetPasswordScreen}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </Provider>
+        </PaperProvider>
+      </KeyboardAvoidingView>
     </SafeAreaView >
 
   )
