@@ -9,6 +9,9 @@ import sZed from './assets/Zed.png';
 import { IoIosArrowBack } from 'react-icons/io'
 import { IoIosArrowForward } from 'react-icons/io'
 
+import { MdFirstPage, MdChevronLeft, MdChevronRight, MdLastPage } from 'react-icons/md'
+
+
 const Container = styled.div`
   display:flex;
   justify-content:center;
@@ -21,9 +24,9 @@ const Carousel = styled.div`
 `
 const Wrapper = styled.div`
 width: 90vw; 
-height: 80vh;
+height: 90vh;
 overflow: hidden;
-background-color:red;
+background-color:black;
  &>${Carousel}{
   display: inline-flex;
   transform: translate3d(0, 0, 0); 
@@ -68,11 +71,11 @@ justify-content:center;
 align-items:center;
 background-color:black;
 width: 90vw; 
-height: 80vh;
+height: 90vh;
 `
 const Img = styled.img`
   width: auto;
-  height: 80vh;
+  height: 90vh;
   object-fit:cover;
 `
 const ArrowBtn = styled.button`
@@ -89,9 +92,25 @@ const ArrowBtn = styled.button`
 `
 
 const Nav = styled.div`
- background-color: black;
+ display:flex;
+ justify-content:center;
+ background-color: #212529;
  width:100%;
  height:10vh;
+
+`
+
+const NavBtn = styled.button`
+  background-color:transparent;
+  border:0;
+  cursor: pointer;
+  color:#adb5bd;
+  font-size:40px;
+
+  :hover{
+    color:white;
+  }
+    
 `
 function App () {
   // const contents = [1, 2, 3, 4];
@@ -103,11 +122,20 @@ function App () {
     carousel.current.style.transform = `translate3d(-${90 * index}vw, 0, 0)`;
 
   }
+  const prevEnd = () => {
+    index = 0
+    carousel.current.style.transform = `translate3d(0, 0, 0)`;
+
+  }
 
   const next = () => {
     if (index === 3) return;
     index += 1;
     carousel.current.style.transform = `translate3d(-${90 * index}vw, 0, 0)`;
+  }
+  const nextEnd = () => {
+    index = 3
+    carousel.current.style.transform = `translate3d(-270vw, 0, 0)`;
   }
   return (
     <div className="App">
@@ -130,11 +158,15 @@ function App () {
           </Carousel>
         </Wrapper>
 
-        <ArrowBtn onClick={next}>
-          <IoIosArrowForward /></ArrowBtn>
+        <ArrowBtn onClick={next}><IoIosArrowForward /></ArrowBtn>
       </Container>
 
-      <Nav></Nav>
+      <Nav>
+        <NavBtn onClick={prevEnd}> <MdFirstPage /></NavBtn>
+        <NavBtn onClick={prev}> <MdChevronLeft /></NavBtn>
+        <NavBtn onClick={next}><MdChevronRight /></NavBtn>
+        <NavBtn onClick={nextEnd}><MdLastPage /></NavBtn>
+      </Nav>
     </div>
   );
 }
