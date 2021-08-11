@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 
 import pizz from './assets/pizz.jpg';
 import pZed from './assets/Proj_Zed.jpg';
@@ -9,10 +9,31 @@ import sZed from './assets/Zed.png';
 import { IoIosArrowBack } from 'react-icons/io'
 import { IoIosArrowForward } from 'react-icons/io'
 
-import { MdFirstPage, MdChevronLeft, MdChevronRight, MdLastPage } from 'react-icons/md'
-
-
+import {
+  MdFirstPage, MdChevronLeft, MdChevronRight,
+  MdLastPage, MdApps, MdInfoOutline, MdClear
+} from 'react-icons/md'
+const Allview = styled.div`
+  position: relative;
+  top:100%;
+  margin-top:-100vh;
+  height:100vh;
+  background-color:black;
+  transition: all .3s ease-out;
+`
 const Container = styled.div`
+  overflow:hidden;
+  position: static;
+  height: 100vh;
+  width: 100%;
+  /* :hover{
+    &>${Allview}{
+  top:0;
+ }   
+  } */
+`
+
+const CarouselContainer = styled.div`
   display:flex;
   justify-content:center;
   align-items:center;
@@ -92,11 +113,13 @@ const ArrowBtn = styled.button`
 `
 
 const Nav = styled.div`
+ position:relative;
  display:flex;
- justify-content:center;
+ justify-content:space-around;
+
  background-color: #212529;
- width:100%;
  height:10vh;
+ z-index:2;
 
 `
 
@@ -112,9 +135,12 @@ const NavBtn = styled.button`
   }
     
 `
+
 function App () {
   // const contents = [1, 2, 3, 4];
   const carousel = useRef();
+  const modal = useRef();
+  const [isModal, setModal] = useState(true);
   let index = 0;
   const prev = () => {
     if (index === 0) return;
@@ -137,38 +163,55 @@ function App () {
     index = 3
     carousel.current.style.transform = `translate3d(-270vw, 0, 0)`;
   }
+
+  const allView = () => {
+    setModal(false);
+    modal.current.style.top = 0;
+  }
+  const closeAllView = () => {
+    setModal(true);
+    modal.current.style.top = '100%';
+  }
+
   return (
-    <div className="App">
+    <div className="App" >
       <Container>
-        <ArrowBtn onClick={prev}> <IoIosArrowBack /></ArrowBtn>
-        <Wrapper>
-          <Carousel ref={carousel}>
-            {/* {
+        <CarouselContainer>
+          <ArrowBtn onClick={prev}> <IoIosArrowBack /></ArrowBtn>
+          <Wrapper>
+            <Carousel ref={carousel}>
+              {/* {
             contents.map((el, idx) => {
               return (
                 <Content key={idx} color={idx} ></Content>
               )
             })
           } */}
-            <Content> <Img src={pizz}></Img></Content>
-            <Content> <Img src={sZed}></Img></Content>
-            <Content> <Img src={akali}></Img></Content>
-            <Content><Img src={pZed}></Img></Content>
+              <Content> <Img src={pizz}></Img></Content>
+              <Content> <Img src={sZed}></Img></Content>
+              <Content> <Img src={akali}></Img></Content>
+              <Content><Img src={pZed}></Img></Content>
 
-          </Carousel>
-        </Wrapper>
+            </Carousel>
+          </Wrapper>
 
-        <ArrowBtn onClick={next}><IoIosArrowForward /></ArrowBtn>
-      </Container>
+          <ArrowBtn onClick={next}><IoIosArrowForward /></ArrowBtn>
+        </CarouselContainer >
 
-      <Nav>
-        <NavBtn onClick={prevEnd}> <MdFirstPage /></NavBtn>
-        <NavBtn onClick={prev}> <MdChevronLeft /></NavBtn>
-        <NavBtn onClick={next}><MdChevronRight /></NavBtn>
-        <NavBtn onClick={nextEnd}><MdLastPage /></NavBtn>
-      </Nav>
-    </div>
+        <Nav>
+          {isModal ? (<NavBtn onClick={allView}> <MdApps />  </NavBtn>) : (<NavBtn onClick={closeAllView}> <MdClear />  </NavBtn>)}
+          <div style={{ display: 'flex' }}>
+            <NavBtn onClick={prevEnd}> <MdFirstPage /></NavBtn>
+            <NavBtn onClick={prev}> <MdChevronLeft /></NavBtn>
+            <NavBtn onClick={next}><MdChevronRight /></NavBtn>
+            <NavBtn onClick={nextEnd}><MdLastPage /></NavBtn>
+          </div>
+          <NavBtn onClick={nextEnd}><MdInfoOutline /></NavBtn>
+        </Nav>
+        < Allview ref={modal} />
+
+      </Container >
+
+    </div >
   );
-}
-
-export default App;
+} export default App;
