@@ -6,6 +6,9 @@ import pZed from './assets/Proj_Zed.jpg';
 import akali from './assets/akali.jpg';
 import sZed from './assets/Zed.png';
 
+import { IoIosArrowBack } from 'react-icons/io'
+import { IoIosArrowForward } from 'react-icons/io'
+
 const Container = styled.div`
   display:flex;
   justify-content:center;
@@ -16,8 +19,6 @@ const Container = styled.div`
 
 const Carousel = styled.div`
 `
-
-
 const Wrapper = styled.div`
 width: 90vw; 
 height: 80vh;
@@ -74,12 +75,19 @@ const Img = styled.img`
   height: 80vh;
   object-fit:cover;
 `
-const PrevBtn = styled.button`
-  margin:10px;
+const ArrowBtn = styled.button`
+  background-color:transparent;
+  border:0;
+  cursor: pointer;
+  color:#adb5bd;
+  font-size:60px;
+
+  :hover{
+    color:white;
+  }
+    
 `
-const NextBtn = styled.button`
-  margin:10px;
-`
+
 const Nav = styled.div`
  background-color: black;
  width:100%;
@@ -104,7 +112,7 @@ function App () {
   return (
     <div className="App">
       <Container>
-        <PrevBtn onClick={prev}>prev</PrevBtn>
+        <ArrowBtn onClick={prev}> <IoIosArrowBack /></ArrowBtn>
         <Wrapper>
           <Carousel ref={carousel}>
             {/* {
@@ -119,14 +127,11 @@ function App () {
             <Content> <Img src={akali}></Img></Content>
             <Content><Img src={pZed}></Img></Content>
 
-
-
-
-
           </Carousel>
         </Wrapper>
 
-        <NextBtn onClick={next}>next</NextBtn>
+        <ArrowBtn onClick={next}>
+          <IoIosArrowForward /></ArrowBtn>
       </Container>
 
       <Nav></Nav>
