@@ -136,23 +136,41 @@ const Nav = styled.div`
  position:relative;
  display:flex;
  justify-content:space-around;
-
+ align-items:center;
  background-color: #212529;
  height:10vh;
  z-index:2;
 
 `
+
+
+const AllViewNum = styled.div`
+  font-size:20px;
+  margin:10px 0 0 10px;
+ 
+`
 const NavBtn = styled.button`
-  
+  display:flex;
   background-color:transparent;
   border:0;
-  ${(props) => {
+  cursor: pointer;
+          color:#adb5bd;
+          :hover{
+            color:white;
+            &>${AllViewNum}{
+              color:#adb5bd;
+            }   
+          }
+  /* ${(props) => {
     return props.isModal || props.isAllView ?
       css`
           cursor: pointer;
           color:#adb5bd;
           :hover{
             color:white;
+            &>${AllViewNum}{
+              color:#adb5bd;
+            }   
           }
         ` :
       css` 
@@ -162,7 +180,7 @@ const NavBtn = styled.button`
         `
   }
 
-  }
+  } */
   ${(props) => {
     return props.info ?
       css` font-size:30px;` :
@@ -171,16 +189,20 @@ const NavBtn = styled.button`
   }
     
 `
+
+
 function App () {
   // const contents = [1, 2, 3, 4];
   const carousel = useRef();
   const modal = useRef();
   const [isModal, setModal] = useState(true);
   const index = useRef(0)
+  const [allViewIdx, setallViewIdx] = useState(1);
+
 
   const selectPage = (idx) => {
-    console.log(idx);
     setModal(true);
+    setallViewIdx(idx + 1);
     modal.current.style.top = '100%';
     index.current = idx;
     carousel.current.style.transform = `translate3d(-${90 * index.current}vw, 0, 0)`;
@@ -189,21 +211,25 @@ function App () {
   const prev = () => {
     if (index.current === 0) return;
     index.current -= 1;
+    setallViewIdx(allViewIdx - 1);
     carousel.current.style.transform = `translate3d(-${90 * index.current}vw, 0, 0)`;
 
   }
   const prevEnd = () => {
     index.current = 0;
+    setallViewIdx(1);
     carousel.current.style.transform = `translate3d(0, 0, 0)`;
 
   }
   const next = () => {
     if (index.current === 5) return;
     index.current += 1;
+    setallViewIdx(allViewIdx + 1);
     carousel.current.style.transform = `translate3d(-${90 * index.current}vw, 0, 0)`;
   }
   const nextEnd = () => {
     index.current = 5;
+    setallViewIdx(6);
     carousel.current.style.transform = `translate3d(-450vw, 0, 0)`;
   }
 
@@ -243,7 +269,16 @@ function App () {
         </CarouselContainer >
 
         <Nav>
-          {isModal ? (<NavBtn isModal={isModal} onClick={allView}> <MdApps />  </NavBtn>) : (<NavBtn isModal={isModal} isAllView={true} onClick={closeAllView}> <MdClear />  </NavBtn>)}
+          {isModal ? (
+            <NavBtn isModal={isModal} onClick={allView}>
+              <MdApps />
+              <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / 6</AllViewNum>
+            </NavBtn>) :
+            (
+              <NavBtn isModal={isModal} isAllView={true} onClick={closeAllView}>
+                <MdClear />
+                <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / 6</AllViewNum>
+              </NavBtn>)}
           <div style={{ display: 'flex' }}>
             <NavBtn isModal={isModal} onClick={prevEnd}> <MdFirstPage /></NavBtn>
             <NavBtn isModal={isModal} onClick={prev}> <MdChevronLeft /></NavBtn>
@@ -255,12 +290,12 @@ function App () {
         </Nav>
 
         < Allview ref={modal} >
-          <ViewImg cur={index.current} idx={0} onClick={() => selectPage(0)} src={pizz}></ViewImg>
-          <ViewImg cur={index.current} idx={1} onClick={() => selectPage(1)} src={sZed}></ViewImg>
-          <ViewImg cur={index.current} idx={2} onClick={() => selectPage(2)} src={akali}></ViewImg>
-          <ViewImg cur={index.current} idx={3} onClick={() => selectPage(3)} src={pZed}></ViewImg>
-          <ViewImg cur={index.current} idx={4} onClick={() => selectPage(4)} src={yasuo}></ViewImg>
-          <ViewImg cur={index.current} idx={5} onClick={() => selectPage(5)} src={Zedgif}></ViewImg>
+          <ViewImg cur={allViewIdx - 1} idx={0} onClick={() => selectPage(0)} src={pizz}></ViewImg>
+          <ViewImg cur={allViewIdx - 1} idx={1} onClick={() => selectPage(1)} src={sZed}></ViewImg>
+          <ViewImg cur={allViewIdx - 1} idx={2} onClick={() => selectPage(2)} src={akali}></ViewImg>
+          <ViewImg cur={allViewIdx - 1} idx={3} onClick={() => selectPage(3)} src={pZed}></ViewImg>
+          <ViewImg cur={allViewIdx - 1} idx={4} onClick={() => selectPage(4)} src={yasuo}></ViewImg>
+          <ViewImg cur={allViewIdx - 1} idx={5} onClick={() => selectPage(5)} src={Zedgif}></ViewImg>
         </Allview>
 
       </Container >
