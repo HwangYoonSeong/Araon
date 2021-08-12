@@ -13,7 +13,7 @@ import { IoIosArrowForward } from 'react-icons/io'
 
 import {
   MdFirstPage, MdChevronLeft, MdChevronRight,
-  MdLastPage, MdApps, MdInfoOutline, MdClear
+  MdLastPage, MdApps, MdInfoOutline, MdClear,
 } from 'react-icons/md'
 
 const Allview = styled.div`
@@ -107,6 +107,18 @@ const ViewImg = styled.img`
   height: 20vh;
   object-fit:cover;
   padding:5px;
+  cursor: pointer;
+  transition: all .3s ease-out;
+  :hover{
+    height: 25vh;
+    border: 3px solid #fab005;
+  }
+  ${(props) => {
+    return props.idx === props.cur ?
+      css`  border: 2px solid white;` :
+      null
+  }
+  }
 `
 const ArrowBtn = styled.button`
   background-color:transparent;
@@ -131,23 +143,34 @@ const Nav = styled.div`
 
 `
 const NavBtn = styled.button`
+  
   background-color:transparent;
   border:0;
-  cursor: pointer;
-  color:#adb5bd;
+  ${(props) => {
+    return props.isModal || props.isAllView ?
+      css`
+          cursor: pointer;
+          color:#adb5bd;
+          :hover{
+            color:white;
+          }
+        ` :
+      css` 
+          color:#495057;
+          cursor: not-allowed;
+          pointer-events: none;
+        `
+  }
+
+  }
   ${(props) => {
     return props.info ?
       css` font-size:30px;` :
       css` font-size:40px;`
   }
   }
-
-  :hover{
-    color:white;
-  }
     
 `
-
 function App () {
   // const contents = [1, 2, 3, 4];
   const carousel = useRef();
@@ -210,9 +233,9 @@ function App () {
               <Content> <Img src={pizz}></Img></Content>
               <Content> <Img src={sZed}></Img></Content>
               <Content> <Img src={akali}></Img></Content>
-              <Content><Img src={pZed}></Img></Content>
-              <Content><Img src={yasuo}></Img></Content>
-              <Content><Img src={Zedgif}></Img></Content>
+              <Content> <Img src={pZed}></Img></Content>
+              <Content> <Img src={yasuo}></Img></Content>
+              <Content> <Img src={Zedgif}></Img></Content>
             </Carousel>
           </Wrapper>
 
@@ -220,22 +243,24 @@ function App () {
         </CarouselContainer >
 
         <Nav>
-          {isModal ? (<NavBtn onClick={allView}> <MdApps />  </NavBtn>) : (<NavBtn onClick={closeAllView}> <MdClear />  </NavBtn>)}
+          {isModal ? (<NavBtn isModal={isModal} onClick={allView}> <MdApps />  </NavBtn>) : (<NavBtn isModal={isModal} isAllView={true} onClick={closeAllView}> <MdClear />  </NavBtn>)}
           <div style={{ display: 'flex' }}>
-            <NavBtn onClick={prevEnd}> <MdFirstPage /></NavBtn>
-            <NavBtn onClick={prev}> <MdChevronLeft /></NavBtn>
-            <NavBtn onClick={next}><MdChevronRight /></NavBtn>
-            <NavBtn onClick={nextEnd}><MdLastPage /></NavBtn>
+            <NavBtn isModal={isModal} onClick={prevEnd}> <MdFirstPage /></NavBtn>
+            <NavBtn isModal={isModal} onClick={prev}> <MdChevronLeft /></NavBtn>
+            <NavBtn isModal={isModal} onClick={next}><MdChevronRight /></NavBtn>
+            <NavBtn isModal={isModal} onClick={nextEnd}><MdLastPage /></NavBtn>
           </div>
-          <NavBtn info={true} onClick={nextEnd}><MdInfoOutline /></NavBtn>
+
+          <NavBtn isModal={isModal} info={true} onClick={nextEnd}><MdInfoOutline /></NavBtn>
         </Nav>
+
         < Allview ref={modal} >
-          <ViewImg onClick={() => selectPage(0)} src={pizz}></ViewImg>
-          <ViewImg onClick={() => selectPage(1)} src={sZed}></ViewImg>
-          <ViewImg onClick={() => selectPage(2)} src={akali}></ViewImg>
-          <ViewImg onClick={() => selectPage(3)} src={pZed}></ViewImg>
-          <ViewImg onClick={() => selectPage(4)} src={yasuo}></ViewImg>
-          <ViewImg onClick={() => selectPage(5)} src={Zedgif}></ViewImg>
+          <ViewImg cur={index.current} idx={0} onClick={() => selectPage(0)} src={pizz}></ViewImg>
+          <ViewImg cur={index.current} idx={1} onClick={() => selectPage(1)} src={sZed}></ViewImg>
+          <ViewImg cur={index.current} idx={2} onClick={() => selectPage(2)} src={akali}></ViewImg>
+          <ViewImg cur={index.current} idx={3} onClick={() => selectPage(3)} src={pZed}></ViewImg>
+          <ViewImg cur={index.current} idx={4} onClick={() => selectPage(4)} src={yasuo}></ViewImg>
+          <ViewImg cur={index.current} idx={5} onClick={() => selectPage(5)} src={Zedgif}></ViewImg>
         </Allview>
 
       </Container >
