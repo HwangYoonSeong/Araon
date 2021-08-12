@@ -1,10 +1,12 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import React, { useRef, useState } from 'react';
 
-import pizz from './assets/pizz.jpg';
+import pizz from './assets/Fizz.jpg';
 import pZed from './assets/Proj_Zed.jpg';
 import akali from './assets/akali.jpg';
-import sZed from './assets/Zed.png';
+import sZed from './assets/Zed.jpg';
+import yasuo from './assets/Yasuo.jpg';
+import Zedgif from './assets/Zedgif.webp';
 
 import { IoIosArrowBack } from 'react-icons/io'
 import { IoIosArrowForward } from 'react-icons/io'
@@ -13,12 +15,17 @@ import {
   MdFirstPage, MdChevronLeft, MdChevronRight,
   MdLastPage, MdApps, MdInfoOutline, MdClear
 } from 'react-icons/md'
+
 const Allview = styled.div`
+  display:flex;
+  justify-content:space-around;
+  align-content: space-evenly;
+  flex-wrap: wrap;
   position: relative;
   top:100%;
   margin-top:-100vh;
   height:100vh;
-  background-color:black;
+  background-color:rgba( 0,0, 0, 0.7 );
   transition: all .3s ease-out;
 `
 const Container = styled.div`
@@ -26,11 +33,6 @@ const Container = styled.div`
   position: static;
   height: 100vh;
   width: 100%;
-  /* :hover{
-    &>${Allview}{
-  top:0;
- }   
-  } */
 `
 
 const CarouselContainer = styled.div`
@@ -93,11 +95,18 @@ align-items:center;
 background-color:black;
 width: 90vw; 
 height: 90vh;
+
 `
 const Img = styled.img`
   width: auto;
   height: 90vh;
   object-fit:cover;
+`
+const ViewImg = styled.img`
+  width: auto;
+  height: 20vh;
+  object-fit:cover;
+  padding:5px;
 `
 const ArrowBtn = styled.button`
   background-color:transparent;
@@ -111,7 +120,6 @@ const ArrowBtn = styled.button`
   }
     
 `
-
 const Nav = styled.div`
  position:relative;
  display:flex;
@@ -122,13 +130,17 @@ const Nav = styled.div`
  z-index:2;
 
 `
-
 const NavBtn = styled.button`
   background-color:transparent;
   border:0;
   cursor: pointer;
   color:#adb5bd;
-  font-size:40px;
+  ${(props) => {
+    return props.info ?
+      css` font-size:30px;` :
+      css` font-size:40px;`
+  }
+  }
 
   :hover{
     color:white;
@@ -141,27 +153,35 @@ function App () {
   const carousel = useRef();
   const modal = useRef();
   const [isModal, setModal] = useState(true);
-  let index = 0;
+  const index = useRef(0)
+
+  const selectPage = (idx) => {
+    console.log(idx);
+    setModal(true);
+    modal.current.style.top = '100%';
+    index.current = idx;
+    carousel.current.style.transform = `translate3d(-${90 * index.current}vw, 0, 0)`;
+  }
+
   const prev = () => {
-    if (index === 0) return;
-    index -= 1;
-    carousel.current.style.transform = `translate3d(-${90 * index}vw, 0, 0)`;
+    if (index.current === 0) return;
+    index.current -= 1;
+    carousel.current.style.transform = `translate3d(-${90 * index.current}vw, 0, 0)`;
 
   }
   const prevEnd = () => {
-    index = 0
+    index.current = 0;
     carousel.current.style.transform = `translate3d(0, 0, 0)`;
 
   }
-
   const next = () => {
-    if (index === 3) return;
-    index += 1;
-    carousel.current.style.transform = `translate3d(-${90 * index}vw, 0, 0)`;
+    if (index.current === 5) return;
+    index.current += 1;
+    carousel.current.style.transform = `translate3d(-${90 * index.current}vw, 0, 0)`;
   }
   const nextEnd = () => {
-    index = 3
-    carousel.current.style.transform = `translate3d(-270vw, 0, 0)`;
+    index.current = 5;
+    carousel.current.style.transform = `translate3d(-450vw, 0, 0)`;
   }
 
   const allView = () => {
@@ -191,7 +211,8 @@ function App () {
               <Content> <Img src={sZed}></Img></Content>
               <Content> <Img src={akali}></Img></Content>
               <Content><Img src={pZed}></Img></Content>
-
+              <Content><Img src={yasuo}></Img></Content>
+              <Content><Img src={Zedgif}></Img></Content>
             </Carousel>
           </Wrapper>
 
@@ -206,9 +227,16 @@ function App () {
             <NavBtn onClick={next}><MdChevronRight /></NavBtn>
             <NavBtn onClick={nextEnd}><MdLastPage /></NavBtn>
           </div>
-          <NavBtn onClick={nextEnd}><MdInfoOutline /></NavBtn>
+          <NavBtn info={true} onClick={nextEnd}><MdInfoOutline /></NavBtn>
         </Nav>
-        < Allview ref={modal} />
+        < Allview ref={modal} >
+          <ViewImg onClick={() => selectPage(0)} src={pizz}></ViewImg>
+          <ViewImg onClick={() => selectPage(1)} src={sZed}></ViewImg>
+          <ViewImg onClick={() => selectPage(2)} src={akali}></ViewImg>
+          <ViewImg onClick={() => selectPage(3)} src={pZed}></ViewImg>
+          <ViewImg onClick={() => selectPage(4)} src={yasuo}></ViewImg>
+          <ViewImg onClick={() => selectPage(5)} src={Zedgif}></ViewImg>
+        </Allview>
 
       </Container >
 
