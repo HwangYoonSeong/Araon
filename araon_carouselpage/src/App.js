@@ -14,6 +14,7 @@ import Varus_9 from './assets/Varus_9.jpg';
 
 import { IoIosArrowBack } from 'react-icons/io'
 import { IoIosArrowForward } from 'react-icons/io'
+import axios from 'axios';
 
 import {
   MdFirstPage, MdChevronLeft, MdChevronRight,
@@ -48,14 +49,6 @@ const CarouselContainer = styled.div`
 const Carousel = styled.div`
 `
 const Wrapper = styled.div`
-display:flex;
-${(props) => {
-    return props.isFileUpload ?
-      css`  justify-content:center;` :
-      null
-  }
-  }
-align-items:center;
 width: 90vw; 
 height: 90vh;
 overflow: hidden;
@@ -202,6 +195,7 @@ const NavBtn = styled.button`
 `
 const FileUploadView = styled.div`
  display:flex;
+ flex-direction:column;
  justify-content:center;
  align-items: center;
  height:100vh;
@@ -209,13 +203,22 @@ const FileUploadView = styled.div`
  position: relative;
  margin-top:-100vh;
  bottom:-100%;
- color:white;
  transition: all .3s ease-out;
  z-index:3;
 `
+const FileUploadContainer = styled.div`
+display:flex;
+margin-top:20px;
+`
 const FileUpload = styled.input`
+  color:white;
 `
 const FileUploadBtn = styled.button`
+`
+
+const Title = styled.div`
+  color:white;
+  font-size:50px;
 `
 function App () {
   // const contents = [1, 2, 3, 4];
@@ -225,12 +228,12 @@ function App () {
   const [isModal, setModal] = useState(true);
   const index = useRef(0)
   const [allViewIdx, setallViewIdx] = useState(1);
-  const [isFileUpload, setFileUpload] = useState(false);
+  const [imgs, setImages] = useState([]);
 
   const selectPage = (idx) => {
     setModal(true);
     setallViewIdx(idx + 1);
-    AllViewRef.current.style.top = '100%';
+    AllViewRef.current.style.marginTop = '0';
     index.current = idx;
     carousel.current.style.transform = `translate3d(-${90 * index.current}vw, 0, 0)`;
   }
@@ -268,21 +271,38 @@ function App () {
     setModal(true);
     AllViewRef.current.style.marginTop = '0';
   }
+
+  const FileOnChange = (e) => {
+    setImages(e.target.files);
+  }
+
   const upload = () => {
-    AllViewRef.current.focus();
     FileUploadRef.current.style.bottom = '0';
+
+    const formData = new FormData();
+    imgs.forEach((el) => {
+      formData.append('Images[]', el);
+    })
+
+    // 서버의 upload API 호출
+    axios.post("/api/upload", formData);
+
   }
   return (
     <div className="App" >
       <Container>
         < FileUploadView ref={FileUploadRef}   >
-          <FileUpload type="img" />
-          <FileUploadBtn onClick={upload}>Upload</FileUploadBtn>
+          <Title>Araon Carousel Page</Title>
+          <FileUploadContainer>
+            <FileUpload type="file" multiple="multiple" name="filename[]" onChange={FileOnChange} />
+            <FileUploadBtn onClick={upload}>Upload</FileUploadBtn>
+          </FileUploadContainer>
+
         </FileUploadView>
         <CarouselContainer>
           <ArrowBtn onClick={prev}> <IoIosArrowBack /></ArrowBtn>
-          <Wrapper isFileUpload={isFileUpload}>
-            {/* <Carousel ref={carousel}>
+          <Wrapper >
+            <Carousel ref={carousel}>
               <Content> <Img src={pizz}></Img></Content>
               <Content> <Img src={sZed}></Img></Content>
               <Content> <Img src={akali}></Img></Content>
@@ -293,7 +313,7 @@ function App () {
               <Content> <Img src={Fizz_8}></Img></Content>
               <Content> <Img src={Nocturne_7}></Img></Content>
               <Content> <Img src={Varus_9}></Img></Content>
-            </Carousel> */}
+            </Carousel>
           </Wrapper>
 
           <ArrowBtn onClick={next}><IoIosArrowForward /></ArrowBtn>
