@@ -7,6 +7,10 @@ import akali from './assets/akali.jpg';
 import sZed from './assets/Zed.jpg';
 import yasuo from './assets/Yasuo.jpg';
 import Zedgif from './assets/Zedgif.webp';
+import Darius_15 from './assets/Darius_15.jpg';
+import Fizz_8 from './assets/Fizz_8.jpg';
+import Nocturne_7 from './assets/Nocturne_7.jpg';
+import Varus_9 from './assets/Varus_9.jpg';
 
 import { IoIosArrowBack } from 'react-icons/io'
 import { IoIosArrowForward } from 'react-icons/io'
@@ -19,11 +23,9 @@ import {
 const Allview = styled.div`
   display:flex;
   justify-content:space-around;
-  align-content: space-evenly;
+  align-content: center;
   flex-wrap: wrap;
   position: relative;
-  top:100%;
-  margin-top:-100vh;
   height:100vh;
   background-color:rgba( 0,0, 0, 0.7 );
   transition: all .3s ease-out;
@@ -46,6 +48,14 @@ const CarouselContainer = styled.div`
 const Carousel = styled.div`
 `
 const Wrapper = styled.div`
+display:flex;
+${(props) => {
+    return props.isFileUpload ?
+      css`  justify-content:center;` :
+      null
+  }
+  }
+align-items:center;
 width: 90vw; 
 height: 90vh;
 overflow: hidden;
@@ -106,6 +116,7 @@ const ViewImg = styled.img`
   width: auto;
   height: 20vh;
   object-fit:cover;
+  margin:10px;
   padding:5px;
   cursor: pointer;
   transition: all .3s ease-out;
@@ -189,21 +200,37 @@ const NavBtn = styled.button`
   }
     
 `
-
-
+const FileUploadView = styled.div`
+ display:flex;
+ justify-content:center;
+ align-items: center;
+ height:100vh;
+ background-color:rgba( 0,0, 0, 0.7 );
+ position: relative;
+ margin-top:-100vh;
+ bottom:-100%;
+ color:white;
+ transition: all .3s ease-out;
+ z-index:3;
+`
+const FileUpload = styled.input`
+`
+const FileUploadBtn = styled.button`
+`
 function App () {
   // const contents = [1, 2, 3, 4];
   const carousel = useRef();
-  const modal = useRef();
+  const AllViewRef = useRef();
+  const FileUploadRef = useRef();
   const [isModal, setModal] = useState(true);
   const index = useRef(0)
   const [allViewIdx, setallViewIdx] = useState(1);
-
+  const [isFileUpload, setFileUpload] = useState(false);
 
   const selectPage = (idx) => {
     setModal(true);
     setallViewIdx(idx + 1);
-    modal.current.style.top = '100%';
+    AllViewRef.current.style.top = '100%';
     index.current = idx;
     carousel.current.style.transform = `translate3d(-${90 * index.current}vw, 0, 0)`;
   }
@@ -222,47 +249,51 @@ function App () {
 
   }
   const next = () => {
-    if (index.current === 5) return;
+    if (index.current === 9) return;
     index.current += 1;
     setallViewIdx(allViewIdx + 1);
     carousel.current.style.transform = `translate3d(-${90 * index.current}vw, 0, 0)`;
   }
   const nextEnd = () => {
-    index.current = 5;
-    setallViewIdx(6);
-    carousel.current.style.transform = `translate3d(-450vw, 0, 0)`;
+    index.current = 9;
+    setallViewIdx(10);
+    carousel.current.style.transform = `translate3d(-810vw, 0, 0)`;
   }
 
   const allView = () => {
     setModal(false);
-    modal.current.style.top = 0;
+    AllViewRef.current.style.marginTop = '-100vh';
   }
   const closeAllView = () => {
     setModal(true);
-    modal.current.style.top = '100%';
+    AllViewRef.current.style.marginTop = '0';
   }
-
+  const upload = () => {
+    AllViewRef.current.focus();
+    FileUploadRef.current.style.bottom = '0';
+  }
   return (
     <div className="App" >
       <Container>
+        < FileUploadView ref={FileUploadRef}   >
+          <FileUpload type="img" />
+          <FileUploadBtn onClick={upload}>Upload</FileUploadBtn>
+        </FileUploadView>
         <CarouselContainer>
           <ArrowBtn onClick={prev}> <IoIosArrowBack /></ArrowBtn>
-          <Wrapper>
-            <Carousel ref={carousel}>
-              {/* {
-            contents.map((el, idx) => {
-              return (
-                <Content key={idx} color={idx} ></Content>
-              )
-            })
-          } */}
+          <Wrapper isFileUpload={isFileUpload}>
+            {/* <Carousel ref={carousel}>
               <Content> <Img src={pizz}></Img></Content>
               <Content> <Img src={sZed}></Img></Content>
               <Content> <Img src={akali}></Img></Content>
               <Content> <Img src={pZed}></Img></Content>
               <Content> <Img src={yasuo}></Img></Content>
               <Content> <Img src={Zedgif}></Img></Content>
-            </Carousel>
+              <Content> <Img src={Darius_15}></Img></Content>
+              <Content> <Img src={Fizz_8}></Img></Content>
+              <Content> <Img src={Nocturne_7}></Img></Content>
+              <Content> <Img src={Varus_9}></Img></Content>
+            </Carousel> */}
           </Wrapper>
 
           <ArrowBtn onClick={next}><IoIosArrowForward /></ArrowBtn>
@@ -272,12 +303,12 @@ function App () {
           {isModal ? (
             <NavBtn isModal={isModal} onClick={allView}>
               <MdApps />
-              <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / 6</AllViewNum>
+              <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / 10</AllViewNum>
             </NavBtn>) :
             (
               <NavBtn isModal={isModal} isAllView={true} onClick={closeAllView}>
                 <MdClear />
-                <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / 6</AllViewNum>
+                <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / 10</AllViewNum>
               </NavBtn>)}
           <div style={{ display: 'flex' }}>
             <NavBtn isModal={isModal} onClick={prevEnd}> <MdFirstPage /></NavBtn>
@@ -289,13 +320,17 @@ function App () {
           <NavBtn isModal={isModal} info={true} onClick={nextEnd}><MdInfoOutline /></NavBtn>
         </Nav>
 
-        < Allview ref={modal} >
+        < Allview ref={AllViewRef} >
           <ViewImg cur={allViewIdx - 1} idx={0} onClick={() => selectPage(0)} src={pizz}></ViewImg>
           <ViewImg cur={allViewIdx - 1} idx={1} onClick={() => selectPage(1)} src={sZed}></ViewImg>
           <ViewImg cur={allViewIdx - 1} idx={2} onClick={() => selectPage(2)} src={akali}></ViewImg>
           <ViewImg cur={allViewIdx - 1} idx={3} onClick={() => selectPage(3)} src={pZed}></ViewImg>
           <ViewImg cur={allViewIdx - 1} idx={4} onClick={() => selectPage(4)} src={yasuo}></ViewImg>
           <ViewImg cur={allViewIdx - 1} idx={5} onClick={() => selectPage(5)} src={Zedgif}></ViewImg>
+          <ViewImg cur={allViewIdx - 1} idx={6} onClick={() => selectPage(6)} src={Darius_15}></ViewImg>
+          <ViewImg cur={allViewIdx - 1} idx={7} onClick={() => selectPage(7)} src={Fizz_8}></ViewImg>
+          <ViewImg cur={allViewIdx - 1} idx={8} onClick={() => selectPage(8)} src={Nocturne_7}></ViewImg>
+          <ViewImg cur={allViewIdx - 1} idx={9} onClick={() => selectPage(9)} src={Varus_9}></ViewImg>
         </Allview>
 
       </Container >
