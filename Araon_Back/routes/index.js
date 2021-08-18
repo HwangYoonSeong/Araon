@@ -5,6 +5,28 @@ const db = require('../config/db');
 const Query = require('pg').Query
 const jwt = require("jsonwebtoken");
 const secretKey = require("../config/jwt");
+const imageUploader = require('./image.controller').imageUpload;
+router.use('/images', express.static('images/'));
+
+const multer = require('multer');
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'images/');
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.originalname);
+    }
+  }),
+});
+
+router.post('/carousel/upload', upload.array('images[]'), (req, res) => {
+  console.log(req.body);
+  console.log(req.files);
+
+  res.json({ res: "Hello World" });
+
+});
 
 router.post('/upload', function (req, res) {
   // res.json({ res: "Hello World" });

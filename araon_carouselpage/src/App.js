@@ -1,21 +1,9 @@
 import styled, { css } from 'styled-components';
 import React, { useRef, useState } from 'react';
-
-import pizz from './assets/Fizz.jpg';
-import pZed from './assets/Proj_Zed.jpg';
-import akali from './assets/akali.jpg';
-import sZed from './assets/Zed.jpg';
-import yasuo from './assets/Yasuo.jpg';
-import Zedgif from './assets/Zedgif.webp';
-import Darius_15 from './assets/Darius_15.jpg';
-import Fizz_8 from './assets/Fizz_8.jpg';
-import Nocturne_7 from './assets/Nocturne_7.jpg';
-import Varus_9 from './assets/Varus_9.jpg';
-
 import { IoIosArrowBack } from 'react-icons/io'
 import { IoIosArrowForward } from 'react-icons/io'
 import axios from 'axios';
-
+import ipObj from "./key";
 import {
   MdFirstPage, MdChevronLeft, MdChevronRight,
   MdLastPage, MdApps, MdInfoOutline, MdClear,
@@ -59,38 +47,6 @@ background-color:black;
   transition: transform 0.4s;
  }   
 `
-// const Content = styled.div`
-//   display:flex;
-//   width:500px;
-//   height:300px;
-//   justify-content:center;
-//   align-items:center;
-
-//   ${(props) => {
-//     switch (props.color) {
-//       case 0:
-//         return css`
-//          background-color:#74c0fc;
-//          `
-//       case 1:
-//         return css`
-//          background-color:#8ce99a;
-//          `
-//       case 2:
-//         return css`
-//          background-color:#ffe066;
-//          `
-//       default:
-//         return css`
-//          background-color:#c0eb75;
-//          `
-
-//     }
-//   }
-
-//   }
-
-// `
 const Content = styled.div`
 display:flex;
 justify-content:center;
@@ -165,26 +121,6 @@ const NavBtn = styled.button`
               color:#adb5bd;
             }   
           }
-  /* ${(props) => {
-    return props.isModal || props.isAllView ?
-      css`
-          cursor: pointer;
-          color:#adb5bd;
-          :hover{
-            color:white;
-            &>${AllViewNum}{
-              color:#adb5bd;
-            }   
-          }
-        ` :
-      css` 
-          color:#495057;
-          cursor: not-allowed;
-          pointer-events: none;
-        `
-  }
-
-  } */
   ${(props) => {
     return props.info ?
       css` font-size:30px;` :
@@ -229,6 +165,7 @@ function App () {
   const index = useRef(0)
   const [allViewIdx, setallViewIdx] = useState(1);
   const [imgs, setImages] = useState([]);
+  const [isUploaded, setIsUploaded] = useState(false);
 
   const selectPage = (idx) => {
     setModal(true);
@@ -252,15 +189,15 @@ function App () {
 
   }
   const next = () => {
-    if (index.current === 9) return;
+    if (index.current === imgs.length - 1) return;
     index.current += 1;
     setallViewIdx(allViewIdx + 1);
     carousel.current.style.transform = `translate3d(-${90 * index.current}vw, 0, 0)`;
   }
   const nextEnd = () => {
-    index.current = 9;
-    setallViewIdx(10);
-    carousel.current.style.transform = `translate3d(-810vw, 0, 0)`;
+    index.current = imgs.length - 1;
+    setallViewIdx(imgs.length);
+    carousel.current.style.transform = `translate3d(-${90 * (imgs.length - 1)}vw, 0, 0)`;
   }
 
   const allView = () => {
@@ -273,19 +210,35 @@ function App () {
   }
 
   const FileOnChange = (e) => {
-    setImages(e.target.files);
+    console.log(e.target.files);
+    setImages([...imgs, ...e.target.files]);
   }
 
   const upload = () => {
     FileUploadRef.current.style.bottom = '0';
 
     const formData = new FormData();
-    imgs.forEach((el) => {
-      formData.append('Images[]', el);
-    })
-
+    if (imgs != null) {
+      for (let i = 0; i < imgs.length; i++) {
+        console.log(imgs[i].name)
+        formData.append("images[]", imgs[i]);
+      }
+    }
+    const config = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+        Accept: "application/json"
+      }
+    };
     // 서버의 upload API 호출
-    axios.post("/api/upload", formData);
+    axios.post(`${ipObj.server}/carousel/upload`, formData, config)
+      .then(res => {
+        console.log(res);
+        setIsUploaded(true);
+      })
+      .catch(err => {
+        console.log(err.response);
+      });
 
   }
   return (
@@ -294,7 +247,7 @@ function App () {
         < FileUploadView ref={FileUploadRef}   >
           <Title>Araon Carousel Page</Title>
           <FileUploadContainer>
-            <FileUpload type="file" multiple="multiple" name="filename[]" onChange={FileOnChange} />
+            <FileUpload type="file" multiple name="images[]" onChange={FileOnChange} />
             <FileUploadBtn onClick={upload}>Upload</FileUploadBtn>
           </FileUploadContainer>
 
@@ -303,16 +256,10 @@ function App () {
           <ArrowBtn onClick={prev}> <IoIosArrowBack /></ArrowBtn>
           <Wrapper >
             <Carousel ref={carousel}>
-              <Content> <Img src={pizz}></Img></Content>
-              <Content> <Img src={sZed}></Img></Content>
-              <Content> <Img src={akali}></Img></Content>
-              <Content> <Img src={pZed}></Img></Content>
-              <Content> <Img src={yasuo}></Img></Content>
-              <Content> <Img src={Zedgif}></Img></Content>
-              <Content> <Img src={Darius_15}></Img></Content>
-              <Content> <Img src={Fizz_8}></Img></Content>
-              <Content> <Img src={Nocturne_7}></Img></Content>
-              <Content> <Img src={Varus_9}></Img></Content>
+              {isUploaded ? (imgs.map((el, i) => {
+                return <Content key={i}> <Img src={`${ipObj.server}/images/${el.name}`}></Img></Content>
+              })) : null
+              }
             </Carousel>
           </Wrapper>
 
@@ -323,7 +270,7 @@ function App () {
           {isModal ? (
             <NavBtn isModal={isModal} onClick={allView}>
               <MdApps />
-              <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / 10</AllViewNum>
+              <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / {imgs.length}</AllViewNum>
             </NavBtn>) :
             (
               <NavBtn isModal={isModal} isAllView={true} onClick={closeAllView}>
@@ -341,16 +288,10 @@ function App () {
         </Nav>
 
         < Allview ref={AllViewRef} >
-          <ViewImg cur={allViewIdx - 1} idx={0} onClick={() => selectPage(0)} src={pizz}></ViewImg>
-          <ViewImg cur={allViewIdx - 1} idx={1} onClick={() => selectPage(1)} src={sZed}></ViewImg>
-          <ViewImg cur={allViewIdx - 1} idx={2} onClick={() => selectPage(2)} src={akali}></ViewImg>
-          <ViewImg cur={allViewIdx - 1} idx={3} onClick={() => selectPage(3)} src={pZed}></ViewImg>
-          <ViewImg cur={allViewIdx - 1} idx={4} onClick={() => selectPage(4)} src={yasuo}></ViewImg>
-          <ViewImg cur={allViewIdx - 1} idx={5} onClick={() => selectPage(5)} src={Zedgif}></ViewImg>
-          <ViewImg cur={allViewIdx - 1} idx={6} onClick={() => selectPage(6)} src={Darius_15}></ViewImg>
-          <ViewImg cur={allViewIdx - 1} idx={7} onClick={() => selectPage(7)} src={Fizz_8}></ViewImg>
-          <ViewImg cur={allViewIdx - 1} idx={8} onClick={() => selectPage(8)} src={Nocturne_7}></ViewImg>
-          <ViewImg cur={allViewIdx - 1} idx={9} onClick={() => selectPage(9)} src={Varus_9}></ViewImg>
+          {isUploaded ? (imgs.map((el, i) => {
+            return <ViewImg key={i} cur={allViewIdx - 1} idx={i} onClick={() => selectPage(i)} src={`${ipObj.server}/images/${el.name}`}></ViewImg>
+          })) : null
+          }
         </Allview>
 
       </Container >

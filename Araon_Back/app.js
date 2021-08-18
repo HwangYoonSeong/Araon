@@ -5,10 +5,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var fileupload = require("express-fileupload");
+// var fileupload = require("express-fileupload");
 
 var db = require('./config/db');
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 var app = express();
 
 db.connect(err => {
@@ -27,8 +27,11 @@ app.use(express.json({ limit: 5000000 }));
 app.use(express.urlencoded({ extended: false, limit: 5000000, parameterLimit: 5000000 }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(fileupload());
-
+// app.use(fileupload());
+app.use((req, res, next) => {
+  console.log("new request", req.method, req.path, new Date().toLocaleDateString());
+  next();
+})
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
