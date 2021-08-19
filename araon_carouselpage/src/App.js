@@ -10,18 +10,23 @@ import {
 } from 'react-icons/md'
 
 const Allview = styled.div`
-  display:flex;
-  justify-content:space-around;
-  align-content: center;
-  flex-wrap: wrap;
+  display:grid;
+  grid-template-columns:  repeat(5, 1fr);
+  justify-items:center;
+  ${(props) => {
+    return props.imgsLen >= 25 ?
+      css`  align-items: center;` :
+      css`  align-content: center;`
+  }
+  }
   position: relative;
   height:90vh;
-  background-color:rgba( 0,0, 0, 0.7 );
+  background-color:rgba( 100,100, 100, 0.7 );
   transition: all .3s ease-out;
   overflow:auto;
 `
 const Container = styled.div`
-  /* overflow:hidden; */
+  overflow:hidden;
   position: static;
   height: 100vh;
   width: 100%;
@@ -62,16 +67,17 @@ const Img = styled.img`
   height: 90vh;
   object-fit:cover;
 `
+
 const ViewImg = styled.img`
   width: auto;
-  height: 20vh;
+  height: 15vh;
   object-fit:cover;
   margin:10px;
   padding:5px;
   cursor: pointer;
   transition: all .3s ease-out;
   :hover{
-    height: 25vh;
+    height: 20vh;
     border: 3px solid #fab005;
   }
   ${(props) => {
@@ -169,20 +175,6 @@ function App () {
   const [imgs, setImages] = useState([]);
   const [isUploaded, setIsUploaded] = useState(false);
 
-  // useEffect(() => {
-  //   console.log("1");
-
-  //   axios.delete(`${ipObj.server}/carousel`)
-  //     .then(res => {
-
-  //     })
-  //     .catch(err => {
-  //       console.log(err.response);
-  //     });
-
-  // }, []);
-
-
   const selectPage = (idx) => {
     setModal(true);
     setallViewIdx(idx + 1);
@@ -259,7 +251,7 @@ function App () {
     <div className="App" >
       <Container>
         < FileUploadView ref={FileUploadRef}   >
-          <Title>Araon Carousel Page</Title>
+          <Title>Araon Brochure Page</Title>
           <FileUploadContainer>
             <FileUpload type="file" multiple name="images[]" onChange={FileOnChange} />
             <FileUploadBtn onClick={upload}>Upload</FileUploadBtn>
@@ -282,30 +274,33 @@ function App () {
 
         <Nav>
           {isModal ? (
-            <NavBtn isModal={isModal} onClick={allView}>
+            <NavBtn onClick={allView}>
               <MdApps />
               <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / {imgs.length}</AllViewNum>
             </NavBtn>) :
             (
-              <NavBtn isModal={isModal} isAllView={true} onClick={closeAllView}>
+              <NavBtn isAllView={true} onClick={closeAllView}>
                 <MdClear />
-                <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / 10</AllViewNum>
+                <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / {imgs.length}</AllViewNum>
               </NavBtn>)}
           <div style={{ display: 'flex', justifyContent: 'center' }}>
-            <NavBtn isModal={isModal} onClick={prevEnd}> <MdFirstPage /></NavBtn>
-            <NavBtn isModal={isModal} onClick={prev}> <MdChevronLeft /></NavBtn>
-            <NavBtn isModal={isModal} onClick={next}><MdChevronRight /></NavBtn>
-            <NavBtn isModal={isModal} onClick={nextEnd}><MdLastPage /></NavBtn>
+            <NavBtn onClick={prevEnd}> <MdFirstPage /></NavBtn>
+            <NavBtn onClick={prev}> <MdChevronLeft /></NavBtn>
+            <NavBtn onClick={next}><MdChevronRight /></NavBtn>
+            <NavBtn onClick={nextEnd}><MdLastPage /></NavBtn>
           </div>
 
-          <NavBtn isModal={isModal} info={true} onClick={nextEnd}><MdInfoOutline /></NavBtn>
+          <NavBtn info={true} onClick={nextEnd}><MdInfoOutline /></NavBtn>
         </Nav>
 
-        < Allview ref={AllViewRef} >
+        < Allview imgsLen={imgs.length} ref={AllViewRef} >
+
           {isUploaded ? (imgs.map((el, i) => {
             return <ViewImg key={i} cur={allViewIdx - 1} idx={i} onClick={() => selectPage(i)} src={`${ipObj.server}/images/${el.name}`}></ViewImg>
           })) : null
           }
+
+
         </Allview>
 
       </Container >
