@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react';
 import { IoIosArrowBack } from 'react-icons/io'
 import { IoIosArrowForward } from 'react-icons/io'
 import axios from 'axios';
@@ -15,12 +15,13 @@ const Allview = styled.div`
   align-content: center;
   flex-wrap: wrap;
   position: relative;
-  height:100vh;
+  height:90vh;
   background-color:rgba( 0,0, 0, 0.7 );
   transition: all .3s ease-out;
+  overflow:auto;
 `
 const Container = styled.div`
-  overflow:hidden;
+  /* overflow:hidden; */
   position: static;
   height: 100vh;
   width: 100%;
@@ -94,7 +95,8 @@ const ArrowBtn = styled.button`
 `
 const Nav = styled.div`
  position:relative;
- display:flex;
+ display:grid;
+ grid-template-columns: 1fr 2fr 1fr;
  justify-content:space-around;
  align-items:center;
  background-color: #212529;
@@ -111,8 +113,6 @@ const AllViewNum = styled.div`
 `
 const NavBtn = styled.button`
   display:flex;
-  flex-basis:33.33%;
-  width:80px;
   justify-content:center;
   background-color:transparent;
   border:0;
@@ -160,7 +160,6 @@ const Title = styled.div`
   font-size:50px;
 `
 function App () {
-  // const contents = [1, 2, 3, 4];
   const carousel = useRef();
   const AllViewRef = useRef();
   const FileUploadRef = useRef();
@@ -248,6 +247,7 @@ function App () {
     // 서버의 upload API 호출
     axios.post(`${ipObj.server}/carousel`, formData, config)
       .then(res => {
+        console.log(res.status);
         setIsUploaded(true);
       })
       .catch(err => {
@@ -291,7 +291,7 @@ function App () {
                 <MdClear />
                 <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / 10</AllViewNum>
               </NavBtn>)}
-          <div style={{ display: 'flex' }}>
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
             <NavBtn isModal={isModal} onClick={prevEnd}> <MdFirstPage /></NavBtn>
             <NavBtn isModal={isModal} onClick={prev}> <MdChevronLeft /></NavBtn>
             <NavBtn isModal={isModal} onClick={next}><MdChevronRight /></NavBtn>

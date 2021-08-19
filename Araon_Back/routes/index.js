@@ -8,9 +8,15 @@ const secretKey = require("../config/jwt");
 const imageUploader = require('./image.controller').imageUpload;
 router.use('/images', express.static('images/'));
 
+
+router.delete('/carousel', (req, res) => {
+  imagesCleaner("images/", portfolio.projectImages);
+  res.json({ res: "Hello World" });
+
+});
+
+
 router.post('/carousel', imageUploader('images/').array('images[]'), (req, res) => {
-  console.log(req.body);
-  console.log(req.files);
 
   res.json({ res: "Hello World" });
 
