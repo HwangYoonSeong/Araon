@@ -8,19 +8,7 @@ const secretKey = require("../config/jwt");
 const imageUploader = require('./image.controller').imageUpload;
 router.use('/images', express.static('images/'));
 
-const multer = require('multer');
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'images/');
-    },
-    filename: function (req, file, cb) {
-      cb(null, file.originalname);
-    }
-  }),
-});
-
-router.post('/carousel/upload', upload.array('images[]'), (req, res) => {
+router.post('/carousel', imageUploader('images/').array('images[]'), (req, res) => {
   console.log(req.body);
   console.log(req.files);
 

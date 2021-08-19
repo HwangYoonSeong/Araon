@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { IoIosArrowBack } from 'react-icons/io'
 import { IoIosArrowForward } from 'react-icons/io'
 import axios from 'axios';
@@ -111,6 +111,9 @@ const AllViewNum = styled.div`
 `
 const NavBtn = styled.button`
   display:flex;
+  flex-basis:33.33%;
+  width:80px;
+  justify-content:center;
   background-color:transparent;
   border:0;
   cursor: pointer;
@@ -167,6 +170,20 @@ function App () {
   const [imgs, setImages] = useState([]);
   const [isUploaded, setIsUploaded] = useState(false);
 
+  // useEffect(() => {
+  //   console.log("1");
+
+  //   axios.delete(`${ipObj.server}/carousel`)
+  //     .then(res => {
+
+  //     })
+  //     .catch(err => {
+  //       console.log(err.response);
+  //     });
+
+  // }, []);
+
+
   const selectPage = (idx) => {
     setModal(true);
     setallViewIdx(idx + 1);
@@ -210,7 +227,6 @@ function App () {
   }
 
   const FileOnChange = (e) => {
-    console.log(e.target.files);
     setImages([...imgs, ...e.target.files]);
   }
 
@@ -220,7 +236,6 @@ function App () {
     const formData = new FormData();
     if (imgs != null) {
       for (let i = 0; i < imgs.length; i++) {
-        console.log(imgs[i].name)
         formData.append("images[]", imgs[i]);
       }
     }
@@ -231,9 +246,8 @@ function App () {
       }
     };
     // 서버의 upload API 호출
-    axios.post(`${ipObj.server}/carousel/upload`, formData, config)
+    axios.post(`${ipObj.server}/carousel`, formData, config)
       .then(res => {
-        console.log(res);
         setIsUploaded(true);
       })
       .catch(err => {
