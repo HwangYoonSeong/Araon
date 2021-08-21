@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { IoIosArrowBack } from 'react-icons/io'
 import { IoIosArrowForward } from 'react-icons/io'
 import axios from 'axios';
@@ -21,7 +21,7 @@ const Allview = styled.div`
   }
   position: relative;
   height:90vh;
-  background-color:rgba( 100,100, 100, 0.7 );
+  background-color:rgba( 0,0, 0, 0.7 );
   transition: all .3s ease-out;
   overflow:auto;
 `
@@ -165,15 +165,49 @@ const Title = styled.div`
   color:white;
   font-size:50px;
 `
+
+const BrochureList = styled.div`
+display:flex;
+flex-wrap:wrap;
+align-items:center;
+justify-content:space-around;
+justify-items:center;
+width: 30vw;
+height:20vh;
+overflow:auto;
+`
+const Brochure = styled.div`
+width: 6vw;
+color:white;
+font-size:20px;
+padding:10px;
+text-align:center;
+cursor: pointer;
+`
 function App () {
   const carousel = useRef();
   const AllViewRef = useRef();
   const FileUploadRef = useRef();
+  const file = useRef();
+
   const [isModal, setModal] = useState(true);
   const index = useRef(0)
   const [allViewIdx, setallViewIdx] = useState(1);
-  const [imgs, setImages] = useState([]);
+  const [inputImgs, setInputImages] = useState([]);//input 
   const [isUploaded, setIsUploaded] = useState(false);
+  const [brochureList, setBrochureList] = useState([]);
+  const [showImgs, setShowImgs] = useState([]);
+  useEffect(() => {
+    axios.get(`${ipObj.server}/carousel/list`)
+      .then(res => {
+        // db에 다른 table도 존재해서 임시로 filter 
+        let temp = res.data.filter((el) => { return el.tablename[0] === 'b' })
+        setBrochureList(temp);
+      })
+      .catch(err => {
+        console.log(err.response);
+      });
+  }, []);
 
   const selectPage = (idx) => {
     setModal(true);
@@ -197,54 +231,86 @@ function App () {
 
   }
   const next = () => {
-    if (index.current === imgs.length - 1) return;
+    if (index.current === showImgs.length - 1) return;
     index.current += 1;
     setallViewIdx(allViewIdx + 1);
     carousel.current.style.transform = `translate3d(-${90 * index.current}vw, 0, 0)`;
   }
   const nextEnd = () => {
-    index.current = imgs.length - 1;
-    setallViewIdx(imgs.length);
-    carousel.current.style.transform = `translate3d(-${90 * (imgs.length - 1)}vw, 0, 0)`;
+    index.current = showImgs.length - 1;
+    setallViewIdx(showImgs.length);
+    carousel.current.style.transform = `translate3d(-${90 * (showImgs.length - 1)}vw, 0, 0)`;
   }
 
   const allView = () => {
     setModal(false);
     AllViewRef.current.style.marginTop = '-100vh';
   }
+
   const closeAllView = () => {
     setModal(true);
     AllViewRef.current.style.marginTop = '0';
   }
 
   const FileOnChange = (e) => {
-    setImages([...imgs, ...e.target.files]);
+    setInputImages([...e.target.files]);
   }
 
   const upload = () => {
-    FileUploadRef.current.style.bottom = '0';
-
+    file.current.value = '';
     const formData = new FormData();
-    if (imgs != null) {
-      for (let i = 0; i < imgs.length; i++) {
-        formData.append("images[]", imgs[i]);
+    if (inputImgs.length !== 0) {
+      for (let i = 0; i < inputImgs.length; i++) {
+        formData.append("images[]", inputImgs[i]);
       }
+    } else {
+      alert("이미지를 입력하세요!!!");
+      return;
     }
+
+    let groupname = null;
+    while (!groupname) groupname = prompt("이미지 그룹 명을 입력하세요", "br1");
+    formData.append("groupname", groupname);
     const config = {
       headers: {
         "Content-Type": "multipart/form-data",
         Accept: "application/json"
       }
     };
+
     // 서버의 upload API 호출
-    axios.post(`${ipObj.server}/carousel`, formData, config)
+    axios.post(`${ipObj.server}/carousel/input`, formData, config)
       .then(res => {
         console.log(res.status);
-        setIsUploaded(true);
+        axios.get(`${ipObj.server}/carousel/list`)
+          .then(res => {
+            // db에 다른 table도 존재해서 임시로 filter 
+            let temp = res.data.filter((el) => { return el.tablename[0] === 'b' })
+            setBrochureList(temp);
+          })
+          .catch(err => {
+            console.log(err.response);
+          });
       })
       .catch(err => {
         console.log(err.response);
       });
+
+
+  }
+
+  const openBrochure = (i) => {
+    axios.get(`${ipObj.server}/carousel/list/${brochureList[i].tablename}`)
+      .then(res => {
+        console.log(res.data);
+        setIsUploaded(true);
+        setShowImgs(res.data);
+      })
+      .catch(err => {
+        console.log(err.response);
+      });
+
+    FileUploadRef.current.style.bottom = '0';
 
   }
   return (
@@ -253,17 +319,21 @@ function App () {
         < FileUploadView ref={FileUploadRef}   >
           <Title>Araon Brochure Page</Title>
           <FileUploadContainer>
-            <FileUpload type="file" multiple name="images[]" onChange={FileOnChange} />
+            <FileUpload ref={file} type="file" multiple name="images[]" onChange={FileOnChange} />
             <FileUploadBtn onClick={upload}>Upload</FileUploadBtn>
           </FileUploadContainer>
-
+          <BrochureList>
+            {brochureList.map((el, i) => {
+              return <Brochure key={i} onClick={() => openBrochure(i)} > {el.tablename}</Brochure>
+            })}
+          </BrochureList>
         </FileUploadView>
         <CarouselContainer>
           <ArrowBtn onClick={prev}> <IoIosArrowBack /></ArrowBtn>
           <Wrapper >
             <Carousel ref={carousel}>
-              {isUploaded ? (imgs.map((el, i) => {
-                return <Content key={i}> <Img src={`${ipObj.server}/images/${el.name}`}></Img></Content>
+              {isUploaded ? (showImgs.map((el, i) => {
+                return <Content key={i}> <Img src={`${ipObj.server}/images/${el.image}`}></Img></Content>
               })) : null
               }
             </Carousel>
@@ -276,12 +346,12 @@ function App () {
           {isModal ? (
             <NavBtn onClick={allView}>
               <MdApps />
-              <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / {imgs.length}</AllViewNum>
+              <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / {showImgs.length}</AllViewNum>
             </NavBtn>) :
             (
               <NavBtn isAllView={true} onClick={closeAllView}>
                 <MdClear />
-                <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / {imgs.length}</AllViewNum>
+                <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / {showImgs.length}</AllViewNum>
               </NavBtn>)}
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <NavBtn onClick={prevEnd}> <MdFirstPage /></NavBtn>
@@ -293,13 +363,12 @@ function App () {
           <NavBtn info={true} onClick={nextEnd}><MdInfoOutline /></NavBtn>
         </Nav>
 
-        < Allview imgsLen={imgs.length} ref={AllViewRef} >
+        < Allview imgsLen={showImgs.length} ref={AllViewRef} >
 
-          {isUploaded ? (imgs.map((el, i) => {
-            return <ViewImg key={i} cur={allViewIdx - 1} idx={i} onClick={() => selectPage(i)} src={`${ipObj.server}/images/${el.name}`}></ViewImg>
+          {isUploaded ? (showImgs.map((el, i) => {
+            return <ViewImg key={i} cur={allViewIdx - 1} idx={i} onClick={() => selectPage(i)} src={`${ipObj.server}/images/${el.image}`}></ViewImg>
           })) : null
           }
-
 
         </Allview>
 

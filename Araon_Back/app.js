@@ -28,10 +28,6 @@ app.use(express.urlencoded({ extended: false, limit: 5000000, parameterLimit: 50
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 // app.use(fileupload());
-app.use((req, res, next) => {
-  console.log("new request", req.method, req.path, new Date().toLocaleDateString());
-  next();
-})
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

@@ -9,10 +9,8 @@ module.exports.imageUpload = function (path) {
         },
         filename: function (req, file, callback) {
             callback(null, file.originalname);
-            console.log(file);
         }
     });
-    console.log(path);
     const upload = multer({
         storage: imageStorage
     });

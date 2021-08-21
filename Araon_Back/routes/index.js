@@ -8,19 +8,60 @@ const secretKey = require("../config/jwt");
 const imageUploader = require('./image.controller').imageUpload;
 router.use('/images', express.static('images/'));
 
-
-router.delete('/carousel', (req, res) => {
-  imagesCleaner("images/", portfolio.projectImages);
-  res.json({ res: "Hello World" });
-
+router.post('/carousel/input', imageUploader('images/').array('images[]'), (req, res) => {
+  const query = new Query(`CREATE TABLE ${req.body.groupname} (image text)`);
+  db.query(query)
+  req.files.forEach((el) => {
+    const query = new Query(`INSERT INTO ${req.body.groupname} (image)  VALUES('${el.originalname}')`);
+    db.query(query)
+  })
+  query.on('end', () => {
+    console.log('query done');
+    res.status(200).end();
+  });
+  query.on('error', err => {
+    console.error(err.stack);
+    res.send({ error: err });
+  });
 });
 
+router.get('/carousel/list', (req, res) => {
+  const query = new Query(`select tablename from pg_tables where schemaname = 'public'`);
+  db.query(query)
+  var rows = [];
 
-router.post('/carousel', imageUploader('images/').array('images[]'), (req, res) => {
+  query.on("row", row => { rows.push(row); });
 
-  res.json({ res: "Hello World" });
-
+  query.on('end', () => {
+    console.log('query done');
+    res.send(rows);
+    res.status(200).end();
+  });
+  query.on('error', err => {
+    console.error(err.stack);
+    res.send({ error: err });
+  });
 });
+
+router.get('/carousel/list/:tablename', (req, res) => {
+  console.log(req.params.tablename)
+  const query = new Query(`select image from ${(req.params.tablename)} `);
+  db.query(query)
+
+  var rows = [];
+  query.on("row", row => { rows.push(row); });
+
+  query.on('end', () => {
+    console.log('query done');
+    res.send(rows);
+    res.status(200).end();
+  });
+  query.on('error', err => {
+    console.error(err.stack);
+    res.send({ error: err });
+  });
+});
+
 
 router.post('/upload', function (req, res) {
   // res.json({ res: "Hello World" });
@@ -45,7 +86,6 @@ router.get('/load', function (req, res) {
   const query = new Query(`SELECT image from images `);
   db.query(query)
   var rows = [];
-
   query.on("row", row => { rows.push(row); });
 
   query.on('end', () => {
@@ -57,7 +97,6 @@ router.get('/load', function (req, res) {
     console.error(err.stack);
     res.send({ error: err });
   });
-
 });
 
 router.post('/login', function (req, res) {
@@ -82,7 +121,6 @@ router.post('/login', function (req, res) {
     } else {
       res.status(400).json({ status: "wrong" });
     }
-
   })
 });
 
@@ -114,9 +152,6 @@ router.get('/verifytoken', function (req, res) {
 router.get('/test', function (req, res) {
   res.json({ res: "Hello World" });
 });
-
-
-
 
 module.exports = router;
 
