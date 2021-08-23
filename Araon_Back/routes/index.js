@@ -9,27 +9,27 @@ const imageUploader = require('./image.controller').imageUpload;
 router.use('/images', express.static('images/'));
 
 router.post('/carousel/input', imageUploader('images/').array('images[]'), (req, res) => {
-  const query = new Query(`CREATE TABLE ${req.body.groupname} (image text)`);
-  db.query(query)
+  let query = '';
+
   req.files.forEach((el) => {
-    const query = new Query(`INSERT INTO ${req.body.groupname} (image)  VALUES('${el.originalname}')`);
-    db.query(query)
+    query += `INSERT INTO brochure VALUES('${req.body.groupname}','${el.originalname}');`;
   })
-  query.on('end', () => {
-    console.log('query done');
-    res.status(200).end();
-  });
-  query.on('error', err => {
-    console.error(err.stack);
-    res.send({ error: err });
+
+  db.query(query, (err, result) => {
+    if (!err) {
+      res.status(200).end();
+    }
+    else {
+      console.log(err);
+      res.send({ error: err });
+    }
   });
 });
 
 router.get('/carousel/list', (req, res) => {
-  const query = new Query(`select tablename from pg_tables where schemaname = 'public'`);
+  const query = new Query(`select distinct brochure.group from brochure`);
   db.query(query)
   var rows = [];
-
   query.on("row", row => { rows.push(row); });
 
   query.on('end', () => {
@@ -45,7 +45,7 @@ router.get('/carousel/list', (req, res) => {
 
 router.get('/carousel/list/:tablename', (req, res) => {
   console.log(req.params.tablename)
-  const query = new Query(`select image from ${(req.params.tablename)} `);
+  const query = new Query(`select * from brochure where brochure.group='${(req.params.tablename)}' `);
   db.query(query)
 
   var rows = [];
@@ -62,6 +62,7 @@ router.get('/carousel/list/:tablename', (req, res) => {
   });
 });
 
+////////////////////////////////////////////////////////////////////////////////////
 
 router.post('/upload', function (req, res) {
   // res.json({ res: "Hello World" });

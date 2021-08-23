@@ -200,9 +200,8 @@ function App () {
   useEffect(() => {
     axios.get(`${ipObj.server}/carousel/list`)
       .then(res => {
-        // db에 다른 table도 존재해서 임시로 filter 
-        let temp = res.data.filter((el) => { return el.tablename[0] === 'b' })
-        setBrochureList(temp);
+        // console.log(res.data[0].group);
+        setBrochureList(res.data);
       })
       .catch(err => {
         console.log(err.response);
@@ -284,9 +283,7 @@ function App () {
         console.log(res.status);
         axios.get(`${ipObj.server}/carousel/list`)
           .then(res => {
-            // db에 다른 table도 존재해서 임시로 filter 
-            let temp = res.data.filter((el) => { return el.tablename[0] === 'b' })
-            setBrochureList(temp);
+            setBrochureList(res.data);
           })
           .catch(err => {
             console.log(err.response);
@@ -300,7 +297,7 @@ function App () {
   }
 
   const openBrochure = (i) => {
-    axios.get(`${ipObj.server}/carousel/list/${brochureList[i].tablename}`)
+    axios.get(`${ipObj.server}/carousel/list/${brochureList[i].group}`)
       .then(res => {
         console.log(res.data);
         setIsUploaded(true);
@@ -324,7 +321,7 @@ function App () {
           </FileUploadContainer>
           <BrochureList>
             {brochureList.map((el, i) => {
-              return <Brochure key={i} onClick={() => openBrochure(i)} > {el.tablename}</Brochure>
+              return <Brochure key={i} onClick={() => openBrochure(i)} > {el.group}</Brochure>
             })}
           </BrochureList>
         </FileUploadView>
