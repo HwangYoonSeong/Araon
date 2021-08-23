@@ -1,7 +1,5 @@
 import styled, { css } from 'styled-components';
 import React, { useRef, useState, useEffect } from 'react';
-import { IoIosArrowBack } from 'react-icons/io'
-import { IoIosArrowForward } from 'react-icons/io'
 import axios from 'axios';
 import ipObj from "./key";
 import {
@@ -10,6 +8,7 @@ import {
 } from 'react-icons/md'
 
 import FileUploadComp from './components/FileUploadComp';
+import CarouselComp from './components/CarouselComp';
 
 const Allview = styled.div`
   display:grid;
@@ -34,42 +33,6 @@ const Container = styled.div`
   width: 100%;
 `
 
-const CarouselContainer = styled.div`
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background-color: #343a40;
-  height:90vh;
-`
-
-const Carousel = styled.div`
-`
-const Wrapper = styled.div`
-width: 90vw; 
-height: 90vh;
-overflow: hidden;
-background-color:black;
- &>${Carousel}{
-  display: inline-flex;
-  transform: translate3d(0, 0, 0); 
-  transition: transform 0.4s;
- }   
-`
-const Content = styled.div`
-display:flex;
-justify-content:center;
-align-items:center;
-background-color:black;
-width: 90vw; 
-height: 90vh;
-
-`
-const Img = styled.img`
-  width: auto;
-  height: 90vh;
-  object-fit:cover;
-`
-
 const ViewImg = styled.img`
   width: auto;
   height: 15vh;
@@ -89,18 +52,7 @@ const ViewImg = styled.img`
   }
   }
 `
-const ArrowBtn = styled.button`
-  background-color:transparent;
-  border:0;
-  cursor: pointer;
-  color:#adb5bd;
-  font-size:60px;
 
-  :hover{
-    color:white;
-  }
-    
-`
 const Nav = styled.div`
  position:relative;
  display:grid;
@@ -112,7 +64,6 @@ const Nav = styled.div`
  z-index:2;
 
 `
-
 
 const AllViewNum = styled.div`
   font-size:20px;
@@ -219,19 +170,13 @@ function App () {
           setShowImgs={setShowImgs}
           prevEnd={prevEnd} />
 
-        <CarouselContainer>
-          <ArrowBtn onClick={prev}> <IoIosArrowBack /></ArrowBtn>
-          <Wrapper >
-            <Carousel ref={carousel}>
-              {isUploaded ? (showImgs.map((el, i) => {
-                return <Content key={i}> <Img src={`${ipObj.server}/images/${el.image}`}></Img></Content>
-              })) : null
-              }
-            </Carousel>
-          </Wrapper>
-
-          <ArrowBtn onClick={next}><IoIosArrowForward /></ArrowBtn>
-        </CarouselContainer >
+        <CarouselComp
+          isUploaded={isUploaded}
+          carousel={carousel}
+          showImgs={showImgs}
+          prev={prev}
+          next={next}
+        />
 
         <Nav>
           {isModal ? (
