@@ -6,8 +6,10 @@ import axios from 'axios';
 import ipObj from "./key";
 import {
   MdFirstPage, MdChevronLeft, MdChevronRight,
-  MdLastPage, MdApps, MdInfoOutline, MdClear,
+  MdLastPage, MdApps, MdClear, MdMenu
 } from 'react-icons/md'
+
+import FileUploadComp from './components/FileUploadComp';
 
 const Allview = styled.div`
   display:grid;
@@ -138,62 +140,14 @@ const NavBtn = styled.button`
   }
     
 `
-const FileUploadView = styled.div`
- display:flex;
- flex-direction:column;
- justify-content:center;
- align-items: center;
- height:100vh;
- background-color:rgba( 0,0, 0, 0.7 );
- position: relative;
- margin-top:-100vh;
- bottom:-100%;
- transition: all .3s ease-out;
- z-index:3;
-`
-const FileUploadContainer = styled.div`
-display:flex;
-margin-top:20px;
-`
-const FileUpload = styled.input`
-  color:white;
-`
-const FileUploadBtn = styled.button`
-`
-
-const Title = styled.div`
-  color:white;
-  font-size:50px;
-`
-
-const BrochureList = styled.div`
-display:flex;
-flex-wrap:wrap;
-align-items:center;
-justify-content:space-around;
-justify-items:center;
-width: 30vw;
-height:20vh;
-overflow:auto;
-`
-const Brochure = styled.div`
-width: 6vw;
-color:white;
-font-size:20px;
-padding:10px;
-text-align:center;
-cursor: pointer;
-`
 function App () {
   const carousel = useRef();
   const AllViewRef = useRef();
   const FileUploadRef = useRef();
-  const file = useRef();
 
   const [isModal, setModal] = useState(true);
   const index = useRef(0)
   const [allViewIdx, setallViewIdx] = useState(1);
-  const [inputImgs, setInputImages] = useState([]);//input 
   const [isUploaded, setIsUploaded] = useState(false);
   const [brochureList, setBrochureList] = useState([]);
   const [showImgs, setShowImgs] = useState([]);
@@ -251,80 +205,20 @@ function App () {
     AllViewRef.current.style.marginTop = '0';
   }
 
-  const FileOnChange = (e) => {
-    setInputImages([...e.target.files]);
-  }
-
-  const upload = () => {
-    file.current.value = '';
-    const formData = new FormData();
-    if (inputImgs.length !== 0) {
-      for (let i = 0; i < inputImgs.length; i++) {
-        formData.append("images[]", inputImgs[i]);
-      }
-    } else {
-      alert("이미지를 입력하세요!!!");
-      return;
-    }
-
-    let groupname = null;
-    while (!groupname) groupname = prompt("이미지 그룹 명을 입력하세요", "br1");
-    formData.append("groupname", groupname);
-    const config = {
-      headers: {
-        "Content-Type": "multipart/form-data",
-        Accept: "application/json"
-      }
-    };
-
-    // 서버의 upload API 호출
-    axios.post(`${ipObj.server}/carousel/input`, formData, config)
-      .then(res => {
-        console.log(res.status);
-        axios.get(`${ipObj.server}/carousel/list`)
-          .then(res => {
-            setBrochureList(res.data);
-          })
-          .catch(err => {
-            console.log(err.response);
-          });
-      })
-      .catch(err => {
-        console.log(err.response);
-      });
-
-
-  }
-
-  const openBrochure = (i) => {
-    axios.get(`${ipObj.server}/carousel/list/${brochureList[i].group}`)
-      .then(res => {
-        console.log(res.data);
-        setIsUploaded(true);
-        setShowImgs(res.data);
-      })
-      .catch(err => {
-        console.log(err.response);
-      });
-
-    FileUploadRef.current.style.bottom = '0';
-
+  const home = () => {
+    FileUploadRef.current.style.bottom = '-100%';
   }
   return (
     <div className="App" >
       <Container>
-        < FileUploadView ref={FileUploadRef}   >
-          <Title>Araon Brochure Page</Title>
-          <FileUploadContainer>
-            <FileUpload ref={file} type="file" multiple name="images[]" onChange={FileOnChange} />
-            <FileUploadBtn onClick={upload}>Upload</FileUploadBtn>
-          </FileUploadContainer>
-          <BrochureList>
-            {brochureList.map((el, i) => {
-              return <Brochure key={i} onClick={() => openBrochure(i)} > {el.group}</Brochure>
-            })}
-          </BrochureList>
-        </FileUploadView>
+        < FileUploadComp
+          brochureList={brochureList}
+          FileUploadRef={FileUploadRef}
+          setIsUploaded={setIsUploaded}
+          setBrochureList={setBrochureList}
+          setShowImgs={setShowImgs}
+          prevEnd={prevEnd} />
+
         <CarouselContainer>
           <ArrowBtn onClick={prev}> <IoIosArrowBack /></ArrowBtn>
           <Wrapper >
@@ -357,7 +251,7 @@ function App () {
             <NavBtn onClick={nextEnd}><MdLastPage /></NavBtn>
           </div>
 
-          <NavBtn info={true} onClick={nextEnd}><MdInfoOutline /></NavBtn>
+          <NavBtn info={true} onClick={home}><MdMenu /></NavBtn>
         </Nav>
 
         < Allview imgsLen={showImgs.length} ref={AllViewRef} >
