@@ -3,7 +3,7 @@ import React from 'react';
 import ipObj from "../key";
 import { IoIosArrowBack } from 'react-icons/io'
 import { IoIosArrowForward } from 'react-icons/io'
-import { useGlobalState } from '../Context';
+import { useGlobalState, useDispatch, useGlobalRef, prev, next } from '../Context';
 const CarouselContainer = styled.div`
   display:flex;
   justify-content:center;
@@ -51,12 +51,20 @@ const ArrowBtn = styled.button`
   }
     
 `
-function FileUploadComp ({ carousel, prev, next }) {
+function CarouselComp () {
     const state = useGlobalState();
-    const images = state.images;
+    const dispatch = useDispatch();
+    const { carousel, index } = useGlobalRef();
+    const { images, allViewIdx } = state;
+    const _prev = () => {
+        prev(dispatch, carousel, index, allViewIdx);
+    }
+    const _next = () => {
+        next(dispatch, carousel, index, allViewIdx, images.length);
+    }
     return (
         <CarouselContainer>
-            <ArrowBtn onClick={prev}> <IoIosArrowBack /></ArrowBtn>
+            <ArrowBtn onClick={_prev}> <IoIosArrowBack /></ArrowBtn>
             <Wrapper >
                 <Carousel ref={carousel}>
                     {images.map((el, i) => {
@@ -66,9 +74,9 @@ function FileUploadComp ({ carousel, prev, next }) {
                 </Carousel>
             </Wrapper>
 
-            <ArrowBtn onClick={next}><IoIosArrowForward /></ArrowBtn>
+            <ArrowBtn onClick={_next}><IoIosArrowForward /></ArrowBtn>
         </CarouselContainer >
     );
 }
 
-export default FileUploadComp;
+export default CarouselComp;

@@ -4,7 +4,7 @@ import {
     MdFirstPage, MdChevronLeft, MdChevronRight,
     MdLastPage, MdApps, MdClear, MdMenu
 } from 'react-icons/md'
-import { useGlobalState } from '../Context';
+import { useGlobalState, useDispatch, useGlobalRef, prev, next, prevEnd, nextEnd } from '../Context';
 const Nav = styled.div`
  position:relative;
  display:grid;
@@ -42,23 +42,40 @@ const NavBtn = styled.button`
     }
     
 `
-function NavComp ({ isModal, setModal, AllViewRef, FileUploadRef, prev, next, prevEnd, nextEnd, allViewIdx }) {
+function NavComp () {
     const state = useGlobalState();
-    const images = state.images;
+    const dispatch = useDispatch();
+    const { carousel, index, FileUploadRef, AllViewRef } = useGlobalRef();
+    const { images, allViewIdx, isModal } = state;
 
     const allView = () => {
-        setModal(false);
+        dispatch({ type: 'SET_ISMODAL', data: false });
         AllViewRef.current.style.marginTop = '-100vh';
     }
 
     const closeAllView = () => {
-        setModal(true);
-        AllViewRef.current.style.marginTop = '0';
+        dispatch({ type: 'SET_ISMODAL', data: true });
+        AllViewRef.current.style.marginTop = '0vh';
     }
 
     const home = () => {
         FileUploadRef.current.style.bottom = '-100%';
     }
+
+    const _prev = () => {
+        prev(dispatch, carousel, index, allViewIdx);
+    }
+    const _next = () => {
+        next(dispatch, carousel, index, allViewIdx, images.length);
+    }
+    const _prevEnd = () => {
+        prevEnd(dispatch, carousel, index);
+    }
+    const _nextEnd = () => {
+        nextEnd(dispatch, carousel, index, images.length);
+    }
+
+
     return (
         <Nav>
             {isModal ? (
@@ -72,10 +89,10 @@ function NavComp ({ isModal, setModal, AllViewRef, FileUploadRef, prev, next, pr
                         <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / {images.length}</AllViewNum>
                     </NavBtn>)}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <NavBtn onClick={prevEnd}> <MdFirstPage /></NavBtn>
-                <NavBtn onClick={prev}> <MdChevronLeft /></NavBtn>
-                <NavBtn onClick={next}><MdChevronRight /></NavBtn>
-                <NavBtn onClick={nextEnd}><MdLastPage /></NavBtn>
+                <NavBtn onClick={_prevEnd}> <MdFirstPage /></NavBtn>
+                <NavBtn onClick={_prev}> <MdChevronLeft /></NavBtn>
+                <NavBtn onClick={_next}><MdChevronRight /></NavBtn>
+                <NavBtn onClick={_nextEnd}><MdLastPage /></NavBtn>
             </div>
 
             <NavBtn info={true} onClick={home}><MdMenu /></NavBtn>

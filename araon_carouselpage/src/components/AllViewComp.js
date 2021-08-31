@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import React from 'react';
 import ipObj from "../key";
-import { useGlobalState } from '../Context';
+import { useGlobalState, useDispatch, useGlobalRef, setallViewIdx } from '../Context';
 const Allview = styled.div`
   display:grid;
   grid-template-columns:  repeat(5, 1fr);
@@ -39,9 +39,20 @@ const ViewImg = styled.img`
 `
 
 
-function AllViewComp ({ AllViewRef, allViewIdx, selectPage }) {
+function AllViewComp () {
     const state = useGlobalState();
-    const images = state.images;
+    const dispatch = useDispatch();
+    const { carousel, index, AllViewRef } = useGlobalRef();
+    const { images, allViewIdx } = state;
+
+    const selectPage = (idx) => {
+        dispatch({ type: 'SET_ISMODAL', data: true });
+        setallViewIdx(dispatch, idx + 1);
+        AllViewRef.current.style.marginTop = '0';
+        index.current = idx;
+        carousel.current.style.transform = `translate3d(-${90 * index.current}vw, 0, 0)`;
+    }
+
     return (
         < Allview imgsLen={images.length} ref={AllViewRef} >
 

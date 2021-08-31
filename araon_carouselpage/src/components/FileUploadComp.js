@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import ipObj from "../key";
-import { useGlobalState, useDispatch, getBrochure, setBrochure, setImages, } from '../Context';
+import { useGlobalState, useDispatch, getBrochure, setBrochure, setImages, useGlobalRef, prevEnd } from '../Context';
 
 const FileUploadView = styled.div`
  display:flex;
@@ -51,9 +51,10 @@ padding:10px;
 text-align:center;
 cursor: pointer;
 `
-function FileUploadComp ({ FileUploadRef, prevEnd }) {
+function FileUploadComp () {
     const state = useGlobalState();
     const dispatch = useDispatch();
+    const { carousel, index, FileUploadRef } = useGlobalRef();
 
     const file = useRef();
     const [inputImgs, setInputImages] = useState([]);//input 
@@ -94,7 +95,8 @@ function FileUploadComp ({ FileUploadRef, prevEnd }) {
             .then(res => {
                 // console.log(res.data);
                 setImages(dispatch, res.data);
-                prevEnd();
+                prevEnd(dispatch, carousel, index);
+                // prevEnd();
 
             })
             .catch(err => {
@@ -105,7 +107,7 @@ function FileUploadComp ({ FileUploadRef, prevEnd }) {
 
     }
     return (
-        < FileUploadView ref={FileUploadRef}   >
+        <FileUploadView ref={FileUploadRef}   >
             <Title>Araon Brochure Page</Title>
             <FileUploadContainer>
                 <FileUpload ref={file} type="file" multiple name="images[]" onChange={FileOnChange} />
