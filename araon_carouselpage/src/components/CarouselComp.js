@@ -3,6 +3,7 @@ import React from 'react';
 import ipObj from "../key";
 import { IoIosArrowBack } from 'react-icons/io'
 import { IoIosArrowForward } from 'react-icons/io'
+import { useGlobalState } from '../Context';
 const CarouselContainer = styled.div`
   display:flex;
   justify-content:center;
@@ -50,13 +51,15 @@ const ArrowBtn = styled.button`
   }
     
 `
-function FileUploadComp ({ carousel, showImgs, prev, next }) {
+function FileUploadComp ({ carousel, prev, next }) {
+    const state = useGlobalState();
+    const images = state.images;
     return (
         <CarouselContainer>
             <ArrowBtn onClick={prev}> <IoIosArrowBack /></ArrowBtn>
             <Wrapper >
                 <Carousel ref={carousel}>
-                    {showImgs.map((el, i) => {
+                    {images.map((el, i) => {
                         return <Content key={i}> <Img src={`${ipObj.server}/images/${el.image}`}></Img></Content>
                     })
                     }

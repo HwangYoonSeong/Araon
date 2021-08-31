@@ -4,6 +4,7 @@ import ipObj from "./key";
 
 const initialState = {
     brochure: [],
+    images: [],
 };
 
 
@@ -13,6 +14,12 @@ function brochureReducer (state, action) {
             return {
                 ...state,
                 brochure: action.data
+            };
+
+        case 'SET_IMAGES':
+            return {
+                ...state,
+                images: action.data
             };
 
 
@@ -80,4 +87,9 @@ export async function setBrochure (dispatch, formData) {
         console.log(e);
     }
 }
+
+export async function setImages (dispatch, images) {
+    dispatch({ type: 'SET_IMAGES', data: images });
+}
+
 

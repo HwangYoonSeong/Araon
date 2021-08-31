@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import ipObj from "../key";
-import { useGlobalState, useDispatch, getBrochure, setBrochure, } from '../Context';
+import { useGlobalState, useDispatch, getBrochure, setBrochure, setImages, } from '../Context';
 
 const FileUploadView = styled.div`
  display:flex;
@@ -51,7 +51,7 @@ padding:10px;
 text-align:center;
 cursor: pointer;
 `
-function FileUploadComp ({ FileUploadRef, setShowImgs, prevEnd }) {
+function FileUploadComp ({ FileUploadRef, prevEnd }) {
     const state = useGlobalState();
     const dispatch = useDispatch();
 
@@ -93,7 +93,7 @@ function FileUploadComp ({ FileUploadRef, setShowImgs, prevEnd }) {
         axios.get(`${ipObj.server}/carousel/list/${brochureList[i].group}`)
             .then(res => {
                 // console.log(res.data);
-                setShowImgs(res.data);
+                setImages(dispatch, res.data);
                 prevEnd();
 
             })

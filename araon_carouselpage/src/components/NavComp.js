@@ -4,7 +4,7 @@ import {
     MdFirstPage, MdChevronLeft, MdChevronRight,
     MdLastPage, MdApps, MdClear, MdMenu
 } from 'react-icons/md'
-
+import { useGlobalState } from '../Context';
 const Nav = styled.div`
  position:relative;
  display:grid;
@@ -42,7 +42,10 @@ const NavBtn = styled.button`
     }
     
 `
-function NavComp ({ isModal, setModal, showImgs, AllViewRef, FileUploadRef, prev, next, prevEnd, nextEnd, allViewIdx }) {
+function NavComp ({ isModal, setModal, AllViewRef, FileUploadRef, prev, next, prevEnd, nextEnd, allViewIdx }) {
+    const state = useGlobalState();
+    const images = state.images;
+
     const allView = () => {
         setModal(false);
         AllViewRef.current.style.marginTop = '-100vh';
@@ -61,12 +64,12 @@ function NavComp ({ isModal, setModal, showImgs, AllViewRef, FileUploadRef, prev
             {isModal ? (
                 <NavBtn onClick={allView}>
                     <MdApps />
-                    <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / {showImgs.length}</AllViewNum>
+                    <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / {images.length}</AllViewNum>
                 </NavBtn>) :
                 (
                     <NavBtn isAllView={true} onClick={closeAllView}>
                         <MdClear />
-                        <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / {showImgs.length}</AllViewNum>
+                        <AllViewNum><span style={{ color: 'white' }}>{allViewIdx}</span> / {images.length}</AllViewNum>
                     </NavBtn>)}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <NavBtn onClick={prevEnd}> <MdFirstPage /></NavBtn>

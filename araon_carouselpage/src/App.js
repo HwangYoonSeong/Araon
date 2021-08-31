@@ -61,12 +61,10 @@ function App () {
       <Container>
         <FileUploadComp
           FileUploadRef={FileUploadRef}
-          setShowImgs={setShowImgs}
           prevEnd={prevEnd}
         />
         <CarouselComp
           carousel={carousel}
-          showImgs={showImgs}
           prev={prev}
           next={next}
         />
@@ -78,12 +76,10 @@ function App () {
           AllViewRef={AllViewRef}
           FileUploadRef={FileUploadRef}
           allViewIdx={allViewIdx}
-          showImgs={showImgs}
           isModal={isModal}
           setModal={setModal}
         />
         <AllViewComp
-          showImgs={showImgs}
           AllViewRef={AllViewRef}
           allViewIdx={allViewIdx}
           selectPage={selectPage}

@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components';
 import React from 'react';
 import ipObj from "../key";
+import { useGlobalState } from '../Context';
 const Allview = styled.div`
   display:grid;
   grid-template-columns:  repeat(5, 1fr);
@@ -38,12 +39,13 @@ const ViewImg = styled.img`
 `
 
 
-function AllViewComp ({ showImgs, AllViewRef, allViewIdx, selectPage }) {
-
+function AllViewComp ({ AllViewRef, allViewIdx, selectPage }) {
+    const state = useGlobalState();
+    const images = state.images;
     return (
-        < Allview imgsLen={showImgs.length} ref={AllViewRef} >
+        < Allview imgsLen={images.length} ref={AllViewRef} >
 
-            {showImgs.map((el, i) => {
+            {images.map((el, i) => {
                 return <ViewImg key={i} cur={allViewIdx - 1} idx={i} onClick={() => selectPage(i)} src={`${ipObj.server}/images/${el.image}`}></ViewImg>
             })
             }
