@@ -1,8 +1,7 @@
-import styled, { css } from 'styled-components';
-import React, { useRef, useState, useEffect } from 'react';
-import axios from 'axios';
-import ipObj from "./key";
+import styled from 'styled-components';
+import React, { useRef, useState } from 'react';
 
+import { Provider } from './Context';
 import FileUploadComp from './components/FileUploadComp';
 import CarouselComp from './components/CarouselComp';
 import NavComp from './components/NavComp';
@@ -19,23 +18,10 @@ function App () {
   const carousel = useRef();
   const AllViewRef = useRef();
   const FileUploadRef = useRef();
-
   const [isModal, setModal] = useState(true);
   const index = useRef(0)
   const [allViewIdx, setallViewIdx] = useState(1);
-  const [isUploaded, setIsUploaded] = useState(false);
-  const [brochureList, setBrochureList] = useState([]);
   const [showImgs, setShowImgs] = useState([]);
-  useEffect(() => {
-    axios.get(`${ipObj.server}/carousel/list`)
-      .then(res => {
-        // console.log(res.data[0].group);
-        setBrochureList(res.data);
-      })
-      .catch(err => {
-        console.log(err.response);
-      });
-  }, []);
 
   const selectPage = (idx) => {
     setModal(true);
@@ -71,18 +57,14 @@ function App () {
   }
 
   return (
-    <div className="App" >
+    <Provider >
       <Container>
-        < FileUploadComp
-          brochureList={brochureList}
+        <FileUploadComp
           FileUploadRef={FileUploadRef}
-          setIsUploaded={setIsUploaded}
-          setBrochureList={setBrochureList}
           setShowImgs={setShowImgs}
-          prevEnd={prevEnd} />
-
+          prevEnd={prevEnd}
+        />
         <CarouselComp
-          isUploaded={isUploaded}
           carousel={carousel}
           showImgs={showImgs}
           prev={prev}
@@ -104,12 +86,11 @@ function App () {
           showImgs={showImgs}
           AllViewRef={AllViewRef}
           allViewIdx={allViewIdx}
-          isUploaded={isUploaded}
           selectPage={selectPage}
         />
 
       </Container >
 
-    </div >
+    </Provider >
   );
 } export default App;

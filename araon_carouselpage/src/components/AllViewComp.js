@@ -38,14 +38,14 @@ const ViewImg = styled.img`
 `
 
 
-function AllViewComp ({ showImgs, AllViewRef, allViewIdx, isUploaded, selectPage }) {
+function AllViewComp ({ showImgs, AllViewRef, allViewIdx, selectPage }) {
 
     return (
         < Allview imgsLen={showImgs.length} ref={AllViewRef} >
 
-            {isUploaded ? (showImgs.map((el, i) => {
+            {showImgs.map((el, i) => {
                 return <ViewImg key={i} cur={allViewIdx - 1} idx={i} onClick={() => selectPage(i)} src={`${ipObj.server}/images/${el.image}`}></ViewImg>
-            })) : null
+            })
             }
 
         </Allview>

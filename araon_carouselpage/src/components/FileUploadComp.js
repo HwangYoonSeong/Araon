@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import axios from 'axios';
 import ipObj from "../key";
+import { useGlobalState, useDispatch, getBrochure, setBrochure, } from '../Context';
 
 const FileUploadView = styled.div`
  display:flex;
@@ -50,9 +51,20 @@ padding:10px;
 text-align:center;
 cursor: pointer;
 `
-function FileUploadComp ({ brochureList, FileUploadRef, setIsUploaded, setBrochureList, setShowImgs, prevEnd }) {
+function FileUploadComp ({ FileUploadRef, setShowImgs, prevEnd }) {
+    const state = useGlobalState();
+    const dispatch = useDispatch();
+
     const file = useRef();
     const [inputImgs, setInputImages] = useState([]);//input 
+
+
+    useEffect(() => {
+        getBrochure(dispatch);
+        // console.log(brochureList);
+    }, [dispatch]);
+
+    const brochureList = state.brochure;
 
     const FileOnChange = (e) => {
         setInputImages([...e.target.files]);
@@ -73,35 +85,14 @@ function FileUploadComp ({ brochureList, FileUploadRef, setIsUploaded, setBrochu
         let groupname = null;
         while (!groupname) groupname = prompt("이미지 그룹 명을 입력하세요", "br1");
         formData.append("groupname", groupname);
-        const config = {
-            headers: {
-                "Content-Type": "multipart/form-data",
-                Accept: "application/json"
-            }
-        };
 
-        // 서버의 upload API 호출
-        axios.post(`${ipObj.server}/carousel/input`, formData, config)
-            .then(res => {
-                console.log(res.status);
-                axios.get(`${ipObj.server}/carousel/list`)
-                    .then(res => {
-                        setBrochureList(res.data);
-                    })
-                    .catch(err => {
-                        console.log(err.response);
-                    });
-            })
-            .catch(err => {
-                console.log(err.response);
-            });
+        setBrochure(dispatch, formData);
     }
 
     const openBrochure = (i) => {
         axios.get(`${ipObj.server}/carousel/list/${brochureList[i].group}`)
             .then(res => {
                 // console.log(res.data);
-                setIsUploaded(true);
                 setShowImgs(res.data);
                 prevEnd();
 
@@ -120,11 +111,12 @@ function FileUploadComp ({ brochureList, FileUploadRef, setIsUploaded, setBrochu
                 <FileUpload ref={file} type="file" multiple name="images[]" onChange={FileOnChange} />
                 <FileUploadBtn onClick={upload}>Upload</FileUploadBtn>
             </FileUploadContainer>
-            <BrochureList>
+            {brochureList && <BrochureList>
                 {brochureList.map((el, i) => {
                     return <Brochure key={i} onClick={() => openBrochure(i)} > {el.group}</Brochure>
                 })}
-            </BrochureList>
+            </BrochureList>}
+
         </FileUploadView>
     );
 }

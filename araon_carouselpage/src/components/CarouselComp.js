@@ -50,16 +50,15 @@ const ArrowBtn = styled.button`
   }
     
 `
-function FileUploadComp ({ isUploaded, carousel, showImgs, prev, next }) {
-
+function FileUploadComp ({ carousel, showImgs, prev, next }) {
     return (
         <CarouselContainer>
             <ArrowBtn onClick={prev}> <IoIosArrowBack /></ArrowBtn>
             <Wrapper >
                 <Carousel ref={carousel}>
-                    {isUploaded ? (showImgs.map((el, i) => {
+                    {showImgs.map((el, i) => {
                         return <Content key={i}> <Img src={`${ipObj.server}/images/${el.image}`}></Img></Content>
-                    })) : null
+                    })
                     }
                 </Carousel>
             </Wrapper>
