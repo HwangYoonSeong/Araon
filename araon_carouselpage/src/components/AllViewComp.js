@@ -4,8 +4,9 @@ import ipObj from "../key";
 import { useGlobalState, useDispatch, useGlobalRef, setallViewIdx } from '../Context';
 const Allview = styled.div`
   display:grid;
-  grid-template-columns:  repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(20%, auto));
   justify-items:center;
+  justify-content: center;
   ${(props) => {
         return props.imgsLen >= 25 ?
             css`  align-items: center;` :
